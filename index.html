@@ -326,9 +326,9 @@ select option{background:#0a0a0f;color:var(--g);}
     <button class="btn btn-b" id="btn-cam" onclick="toggleCamera()">▶ START CAMERA SCAN</button>
 
     <div class="card-b" style="margin-top:4px;">
-      <div class="lbl">MANUAL ID LOOKUP</div>
+      <div class="lbl">MANUAL PHONE LOOKUP</div>
       <div style="display:flex;gap:6px;margin-bottom:12px;">
-        <input id="scan-input" placeholder="NOOK-0001" style="text-transform:uppercase;font-size:7px;" onkeydown="if(event.key==='Enter')doScan()"/>
+        <input id="scan-input" placeholder="5081234567" type="tel" style="font-size:7px;" onkeydown="if(event.key==='Enter')doScan()"/>
         <button class="btn btn-b" style="width:auto;padding:12px 12px;margin-bottom:0;flex-shrink:0;font-size:8px;" onclick="doScan()">GO</button>
       </div>
       <div class="lbl-p">QUICK SELECT</div>
@@ -741,8 +741,8 @@ function renderQuickList(){
   ).join('');
 }
 function doScan(){
-  const val=document.getElementById('scan-input').value.trim().toUpperCase();
-  const found=customers.find(c=>c.id===val);
+  const val=document.getElementById('scan-input').value.trim();
+  const found=customers.find(c=>c.phone===val);
   if(found) selectCustomer(found.id);
   else showToast('!! PLAYER NOT FOUND !!','err');
   document.getElementById('scan-input').value='';
