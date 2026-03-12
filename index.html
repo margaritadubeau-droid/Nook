@@ -4,6 +4,16 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>THE NOOK</title>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://ivqftezvshaywludmteu.supabase.co';
+const supabaseKey = 'sb_publishable_iv8epEM_DZz1bWfcnjCtsQ_vSrJQaPa';
+
+window.supabase = createClient('https://ivqftezvshaywludmteu.supabase.co', 'sb_publishable_iv8epEM_DZz1bWfcnjCtsQ_vSrJQaPa');
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -883,34 +893,10 @@ const REWARD_EXP = 90; // reward expiry in days
 // visits: direct counter — +1 per purchase
 // rewards: [{id, earned, expires, redeemed, redeemedDate, note}]
 // note values: '10-stamp' | 'birthday' | 'admin-grant'  (admin/birthday grants never count as visits)
-let customers = [
-  { id:"NOOK-0001", name:"MARGARITA", phone:"5081234567",
-    birthday:"1990-03-05", stamps:7, visits:24,
-    rewards:[
-      {id:"r1",earned:"2026-01-10",expires:"2026-04-10",redeemed:false,redeemedDate:null,note:"10-stamp"},
-    ],
-    birthdayYear:0, since:"2025-10-01",
-    history:[
-      {date:"2026-02-18",type:"stamp"},{date:"2026-02-22",type:"stamp"},
-      {date:"2026-02-28",type:"stamp"},{date:"2026-03-01",type:"reward",note:"redeemed free coffee"},
-      {date:"2026-03-04",type:"stamp"},{date:"2026-03-07",type:"stamp"},
-    ]
-  },
-  { id:"NOOK-0042", name:"JAMES", phone:"5089876543",
-    birthday:"1985-07-22", stamps:3, visits:8,
-    rewards:[], birthdayYear:0, since:"2025-11-15",
-    history:[
-      {date:"2026-03-01",type:"stamp"},{date:"2026-03-03",type:"stamp"},{date:"2026-03-05",type:"stamp"}
-    ]
-  },
-];
+let customers = [];
 
-function saveData(){try{localStorage.setItem("theNookV4",JSON.stringify(customers));}catch(e){}}
-function loadData(){
-  try{const d=localStorage.getItem("theNookV4");
-    if(d){const p=JSON.parse(d);if(Array.isArray(p)&&p.length)customers=p;}}catch(e){}
-}
-loadData();
+function saveData(){}
+function loadData(){}
 
 // ═══════════════════════════════════════════
 // STATE
@@ -970,41 +956,33 @@ function genRid(){return "r"+Date.now().toString(36)+Math.random().toString(36).
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function addDays(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function daysLeft(ds){return Math.ceil((new Date(ds+'T12:00:00')-new Date())/864e5);}
+
+// ADD THIS RIGHT HERE
+async function loadCustomersFromSupabase() {
+  const { data, error } = await window.supabase
+    .from('customers')
+    .select('*')
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error loading customers:', error);
+    showToast('FAILED TO LOAD CUSTOMERS', 'err');
+    return;
+  }
+
+  customers = (data || []).map(c => ({
+    ...c,
+    visits: c.visits || 0,
+    rewards: [],
+    history: [],
+    since: c.created_at ? c.created_at.slice(0, 10) : todayStr(),
+    birthdayYear: c.birthday_reward_year || 0
+  }));
+}
+
 function isBirthdayMonth(c){
   if(!c?.birthday)return false;
   return new Date(c.birthday+'T12:00:00').getMonth()===new Date().getMonth();
-}
-function bdayUsed(c){return c.birthdayYear===new Date().getFullYear();}
-function pendingRewards(c){const t=todayStr();return(c.rewards||[]).filter(r=>!r.redeemed&&r.expires>=t);}
-function addHist(idx,type,note=''){
-  if(!customers[idx].history)customers[idx].history=[];
-  customers[idx].history.push({date:todayStr(),type,...(note?{note}:{})});
-}
-function syncCustomer(id){
-  const c=customers.find(x=>x.id===id);
-  if(currentCustomer?.id===id)  currentCustomer=c;
-  if(selectedCustomer?.id===id) selectedCustomer=c;
-  if(adminCustomer?.id===id)    adminCustomer=c;
-}
-function renderHPBar(el,stamps,max=10){
-  el.innerHTML=Array.from({length:max},(_,i)=>`<div class="hp-pip ${i<stamps?'on':''}"></div>`).join('');
-}
-function renderOffers(cid,c){
-  let h='';
-  if(c&&isBirthdayMonth(c)&&!bdayUsed(c)) h+=`<div class="offer-banner bday"><span class="ob-icon">🎂</span><div class="ob-text">BIRTHDAY MONTH, ${c.name}!<br>FREE COFFEE WAITING</div></div>`;
-  document.getElementById(cid).innerHTML=h;
-}
-const H_ICO={stamp:'☕',reward:'🏆',birthday:'🎂'};
-const H_LBL={stamp:'STAMP ADDED',reward:'FREE COFFEE',birthday:'BIRTHDAY REWARD'};
-function renderHistList(elId,c){
-  const h=(c.history||[]).slice().reverse();
-  if(!h.length){document.getElementById(elId).innerHTML='<div style="font-size:6px;color:rgba(0,255,136,.2);padding:8px;text-align:center;">NO ACTIVITY YET</div>';return;}
-  document.getElementById(elId).innerHTML=h.map(e=>`
-    <div class="hist-item">
-      <span class="hist-icon">${H_ICO[e.type]||'•'}</span>
-      <div class="hist-text">${H_LBL[e.type]||e.type}${e.note?`<div style="font-size:5px;color:rgba(0,229,255,.35);margin-top:1px;">${e.note}</div>`:''}</div>
-      <span class="hist-date">${e.date}</span>
-    </div>`).join('');
 }
 
 // ═══════════════════════════════════════════
@@ -1044,31 +1022,90 @@ function drawQR(id,elId){
 // ═══════════════════════════════════════════
 // SIGN IN / OUT
 // ═══════════════════════════════════════════
-function doSignIn(){
-  const phone=document.getElementById('w-phone').value.trim();
-  if(!PHONE_RE.test(phone)){showToast('ENTER A VALID 10-DIGIT PHONE','err');return;}
-  const c=customers.find(x=>x.phone===phone);
-  if(!c){showToast('PHONE NOT FOUND — CREATE ACCOUNT?','err');return;}
-  currentCustomer=c; document.getElementById('w-phone').value='';
-  showToast('WELCOME BACK '+c.name+'!'); go('s-c-rewards');
+async function doSignIn(){
+  const phone = document.getElementById('w-phone').value.trim();
+
+  if(!PHONE_RE.test(phone)){
+    showToast('ENTER A VALID 10-DIGIT PHONE','err');
+    return;
+  }
+
+  const { data, error } = await window.supabase
+    .from('customers')
+    .select('*')
+    .eq('phone', phone)
+    .maybeSingle();
+
+  if(error || !data){
+    showToast('PHONE NOT FOUND — CREATE ACCOUNT?','err');
+    return;
+  }
+
+  await loadCustomersFromSupabase();
+  currentCustomer = customers.find(c => c.id === data.id);
+
+  document.getElementById('w-phone').value = '';
+  showToast('WELCOME BACK ' + data.name + '!');
+  go('s-c-rewards');
 }
-function doSignOut(){currentCustomer=null;go('s-welcome');showToast('SEE YOU SOON! ☕','info');}
 
 // ═══════════════════════════════════════════
 // CREATE ACCOUNT
 // ═══════════════════════════════════════════
-function doCreate(){
-  const name=document.getElementById('c-name').value.trim().toUpperCase();
-  const phone=document.getElementById('c-phone').value.trim();
-  if(!name||!phone){showToast('FILL ALL FIELDS','err');return;}
-  if(!PHONE_RE.test(phone)){showToast('INVALID PHONE NUMBER','err');return;}
-  if(customers.some(c=>c.phone===phone)){showToast('PHONE ALREADY REGISTERED','err');return;}
-  const bday=getBday('c-bm','c-bd','c-by');
-  const nc={id:genId(),name,phone,birthday:bday,stamps:0,visits:0,rewards:[],birthdayYear:0,since:todayStr(),history:[]};
-  customers.push(nc); currentCustomer=nc; saveData();
-  document.getElementById('c-name').value=''; document.getElementById('c-phone').value='';
-  ['c-bm','c-bd','c-by'].forEach(id=>document.getElementById(id).value='');
-  showToast('★ WELCOME '+nc.name+'! ★'); go('s-c-rewards');
+async function doCreate(){
+  const name = document.getElementById('c-name').value.trim().toUpperCase();
+  const phone = document.getElementById('c-phone').value.trim();
+
+  if(!name || !phone){
+    showToast('FILL ALL FIELDS','err');
+    return;
+  }
+
+  if(!PHONE_RE.test(phone)){
+    showToast('INVALID PHONE NUMBER','err');
+    return;
+  }
+
+  const bday = getBday('c-bm','c-bd','c-by');
+  const id = genId();
+
+  const { data: existing } = await window.supabase
+    .from('customers')
+    .select('id')
+    .eq('phone', phone)
+    .maybeSingle();
+
+  if(existing){
+    showToast('PHONE ALREADY REGISTERED','err');
+    return;
+  }
+
+  const { error } = await window.supabase
+    .from('customers')
+    .insert({
+      id,
+      name,
+      phone,
+      birthday: bday || null,
+      stamps: 0,
+      birthday_reward_year: 0
+    });
+
+  if(error){
+    console.error(error);
+    showToast('FAILED TO CREATE ACCOUNT','err');
+    return;
+  }
+
+  await loadCustomersFromSupabase();
+  currentCustomer = customers.find(c => c.id === id);
+
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-phone').value = '';
+  ['c-bm','c-bd','c-by'].forEach(x => document.getElementById(x).value = '');
+
+  showToast('★ WELCOME ' + name + '! ★');
+  go('s-c-rewards');
 }
 
 // ═══════════════════════════════════════════
@@ -1328,22 +1365,56 @@ function sdGrantBirthday(){
 // STAFF CAMERA
 // ═══════════════════════════════════════════
 function toggleCamera(){cameraActive?stopCamera():startCamera();}
+function toggleCamera(){cameraActive?stopCamera():startCamera();}
+
 function startCamera(){
-  const rd=document.getElementById('qr-reader'),ph=document.getElementById('scan-placeholder'),btn=document.getElementById('btn-cam');
-  if(typeof Html5Qrcode==='undefined'){showToast('SCANNER NOT LOADED','err');return;}
-  ph.style.display='none'; rd.style.display='block'; rd.innerHTML='';
-  html5QrCode=new Html5Qrcode("qr-reader");
-  html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:180,height:180}},
-    decoded=>{
-      const id=decoded.trim();
-      const c=customers.find(x=>x.id===id);
+  const rd = document.getElementById('qr-reader');
+  const ph = document.getElementById('scan-placeholder');
+  const btn = document.getElementById('btn-cam');
+
+  if(typeof Html5Qrcode === 'undefined'){
+    showToast('SCANNER NOT LOADED','err');
+    return;
+  }
+
+  ph.style.display = 'none';
+  rd.style.display = 'block';
+  rd.innerHTML = '';
+
+  html5QrCode = new Html5Qrcode("qr-reader");
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 180, height: 180 } },
+    async decoded => {
+      const id = decoded.trim();
       stopCamera();
-      if(c){selectedCustomer=c;go('s-staff-detail');}
-      else showToast('QR NOT RECOGNISED','err');
+
+      const { data, error } = await window.supabase
+        .from('customers')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle();
+
+      if(error || !data){
+        showToast('QR NOT RECOGNISED','err');
+        return;
+      }
+
+      await loadCustomersFromSupabase();
+      selectedCustomer = customers.find(c => c.id === data.id);
+      go('s-staff-detail');
     },
-    ()=>{}
-  ).then(()=>{cameraActive=true;btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';})
-   .catch(()=>{rd.style.display='none';ph.style.display='block';showToast('CAMERA UNAVAILABLE','err');});
+    () => {}
+  ).then(() => {
+    cameraActive = true;
+    btn.textContent = '■ STOP CAMERA';
+    btn.className = 'btn btn-r';
+  }).catch(() => {
+    rd.style.display = 'none';
+    ph.style.display = 'block';
+    showToast('CAMERA UNAVAILABLE','err');
+  });
 }
 function stopCamera(){
   if(html5QrCode&&cameraActive){
@@ -1355,11 +1426,25 @@ function stopCamera(){
     });
   }
 }
-function doPhoneScan(){
-  const v=document.getElementById('scan-phone').value.trim();
-  const c=customers.find(x=>x.phone===v);
-  if(c){selectedCustomer=c;go('s-staff-detail');}else showToast('PLAYER NOT FOUND','err');
-  document.getElementById('scan-phone').value='';
+async function doPhoneScan(){
+  const v = document.getElementById('scan-phone').value.trim();
+
+  const { data, error } = await window.supabase
+    .from('customers')
+    .select('*')
+    .eq('phone', v)
+    .maybeSingle();
+
+  if(error || !data){
+    showToast('PLAYER NOT FOUND','err');
+    document.getElementById('scan-phone').value = '';
+    return;
+  }
+
+  await loadCustomersFromSupabase();
+  selectedCustomer = customers.find(c => c.id === data.id);
+  document.getElementById('scan-phone').value = '';
+  go('s-staff-detail');
 }
 
 // ═══════════════════════════════════════════
@@ -1595,10 +1680,17 @@ function getBday(mId,dId,yId){
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
-initYearSelect('c-by'); initYearSelect('s-by');
-populateDays('c-bm','c-bd','c-by'); populateDays('s-bm','s-bd','s-by');
+initYearSelect('c-by'); 
+initYearSelect('s-by');
+populateDays('c-bm','c-bd','c-by'); 
+populateDays('s-bm','s-bd','s-by');
 document.getElementById('qr-reader').style.display='none';
 document.getElementById('qr-reader-adm').style.display='none';
+
+window.addEventListener('load', async () => {
+  await loadCustomersFromSupabase();
+});
+
 window.addEventListener('beforeunload',()=>{stopCamera();stopAdminCamera();});
 </script>
 </body>
