@@ -3,204 +3,198 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>THE NOOK – Loyalty</title>
+<title>THE NOOK</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
-  --bg:#0a0a0f;--panel:#0f0f1a;
+  --bg:#07070f;--bg2:#0d0d1a;
   --g:#00ff88;--b:#00e5ff;--p:#ff00ff;--y:#ffee00;--r:#ff3366;--o:#ff8800;
   --adm:#b060ff;
+  --gg:rgba(0,255,136,.1);--bb:rgba(0,229,255,.1);--pp:rgba(255,0,255,.1);--aa:rgba(176,96,255,.1);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);font-family:'Press Start 2P',monospace;min-height:100vh;
-  display:flex;align-items:flex-start;justify-content:center;padding:20px 0 40px;}
+html,body{min-height:100%;}
+body{background:var(--bg);font-family:'Press Start 2P',monospace;
+  display:flex;align-items:flex-start;justify-content:center;padding:16px 0 40px;}
 body::before{content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.08) 0,rgba(0,0,0,.08) 1px,transparent 1px,transparent 2px);
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.07) 0,rgba(0,0,0,.07) 1px,transparent 1px,transparent 2px);
   pointer-events:none;z-index:9999;}
 body::after{content:'';position:fixed;inset:0;
-  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.7) 100%);
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.8) 100%);
   pointer-events:none;z-index:9998;}
+@keyframes flicker{0%,100%{opacity:1}94%{opacity:.98}97%{opacity:1}}
 
-/* SHELL */
-.phone{width:360px;min-height:680px;background:var(--panel);
-  border:4px solid var(--g);
-  box-shadow:0 0 0 2px var(--bg),0 0 0 4px #003322,
-    0 0 28px rgba(0,255,136,.3),0 0 60px rgba(0,255,136,.08),
-    inset 0 0 40px rgba(0,255,136,.02);
+/* ── PHONE ── */
+.phone{width:360px;min-height:680px;background:var(--bg2);
+  border:3px solid var(--g);
+  box-shadow:0 0 0 2px var(--bg),0 0 0 4px #002211,
+    0 0 28px rgba(0,255,136,.3),0 0 60px rgba(0,255,136,.07),
+    inset 0 0 30px rgba(0,255,136,.02);
   position:relative;overflow:hidden;display:flex;flex-direction:column;
   animation:flicker 10s infinite;}
 .phone::before{content:'';position:absolute;inset:7px;
   border:1px solid rgba(0,255,136,.08);pointer-events:none;z-index:0;}
-@keyframes flicker{0%,100%{opacity:1}94%{opacity:.97}97%{opacity:.99}}
 
-/* SCREENS */
+/* ── SCREENS ── */
 .screen{display:none;flex-direction:column;flex:1;
-  animation:pixIn .1s steps(3) forwards;position:relative;z-index:1;padding:18px 16px 0;}
+  animation:pixIn .12s steps(3) forwards;position:relative;z-index:1;padding:16px 14px 0;}
 .screen.active{display:flex;}
-@keyframes pixIn{from{opacity:0;transform:scale(1.02)}to{opacity:1;transform:scale(1)}}
-.sa{overflow-y:auto;flex:1;padding-bottom:12px;}
-.sa::-webkit-scrollbar{width:3px}
-.sa::-webkit-scrollbar-thumb{background:rgba(0,255,136,.2)}
+@keyframes pixIn{0%{opacity:0;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}}
+.scroll{overflow-y:auto;flex:1;padding-bottom:8px;}
+.scroll::-webkit-scrollbar{width:3px}
+.scroll::-webkit-scrollbar-thumb{background:rgba(0,255,136,.2)}
 
-/* BOTTOM NAV */
-.bnav{display:flex;border-top:2px solid rgba(0,255,136,.15);
-  background:rgba(0,0,0,.93);flex-shrink:0;}
-.bnav.sm{border-top-color:rgba(255,0,255,.2);}
-.bnav.am{border-top-color:rgba(176,96,255,.2);}
-.nb{flex:1;padding:9px 2px 13px;background:none;border:none;
-  font-family:'Press Start 2P',monospace;font-size:5px;
-  cursor:pointer;text-align:center;border-top:2px solid transparent;
-  transition:all .1s;line-height:2.2;letter-spacing:.04em;}
-.nb .ni{font-size:12px;display:block;margin-bottom:2px;}
-/* customer nav */
-.bnav:not(.sm):not(.am) .nb{color:rgba(0,255,136,.25);}
-.bnav:not(.sm):not(.am) .nb.on{color:var(--g);border-top-color:var(--g);text-shadow:0 0 8px var(--g);}
-/* staff nav */
-.bnav.sm .nb{color:rgba(255,0,255,.25);}
-.bnav.sm .nb.on{color:var(--p);border-top-color:var(--p);text-shadow:0 0 8px var(--p);}
-/* admin nav */
-.bnav.am .nb{color:rgba(176,96,255,.25);}
-.bnav.am .nb.on{color:var(--adm);border-top-color:var(--adm);text-shadow:0 0 8px var(--adm);}
-
-/* CARDS */
-.card{position:relative;background:rgba(0,255,136,.06);border:2px solid var(--g);
-  box-shadow:3px 3px 0 #003322;padding:14px;margin-bottom:10px;}
+/* ── CARDS ── */
+.card{position:relative;background:var(--gg);border:2px solid var(--g);box-shadow:3px 3px 0 #002211;padding:13px;margin-bottom:9px;}
 .card::before,.card::after{content:'';position:absolute;width:6px;height:6px;background:var(--g);}
 .card::before{top:-2px;left:-2px}.card::after{bottom:-2px;right:-2px}
-.card-b{position:relative;background:rgba(0,229,255,.06);border:2px solid var(--b);
-  box-shadow:3px 3px 0 #001a22;padding:14px;margin-bottom:10px;}
+.card-b{position:relative;background:var(--bb);border:2px solid var(--b);box-shadow:3px 3px 0 #001522;padding:13px;margin-bottom:9px;}
 .card-b::before,.card-b::after{content:'';position:absolute;width:6px;height:6px;background:var(--b);}
 .card-b::before{top:-2px;left:-2px}.card-b::after{bottom:-2px;right:-2px}
-.card-p{position:relative;background:rgba(255,0,255,.05);border:2px solid var(--p);
-  box-shadow:3px 3px 0 #330033;padding:14px;margin-bottom:10px;}
+.card-p{position:relative;background:var(--pp);border:2px solid var(--p);box-shadow:3px 3px 0 #220022;padding:13px;margin-bottom:9px;}
 .card-p::before,.card-p::after{content:'';position:absolute;width:6px;height:6px;background:var(--p);}
 .card-p::before{top:-2px;left:-2px}.card-p::after{bottom:-2px;right:-2px}
-.card-a{position:relative;background:rgba(176,96,255,.05);border:2px solid var(--adm);
-  box-shadow:3px 3px 0 #1a0033;padding:14px;margin-bottom:10px;}
-.card-a::before,.card-a::after{content:'';position:absolute;width:6px;height:6px;background:var(--adm);}
-.card-a::before{top:-2px;left:-2px}.card-a::after{bottom:-2px;right:-2px}
+.card-adm{position:relative;background:var(--aa);border:2px solid var(--adm);box-shadow:3px 3px 0 #1a0033;padding:13px;margin-bottom:9px;}
+.card-adm::before,.card-adm::after{content:'';position:absolute;width:6px;height:6px;background:var(--adm);}
+.card-adm::before{top:-2px;left:-2px}.card-adm::after{bottom:-2px;right:-2px}
 
-/* BUTTONS */
-.btn{font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:.04em;
-  border:none;cursor:pointer;width:100%;padding:13px 10px;text-align:center;
-  transition:transform .05s;text-transform:uppercase;margin-bottom:8px;line-height:1.7;}
+/* ── BUTTONS ── */
+.btn{font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:.03em;border:none;
+  cursor:pointer;width:100%;padding:13px 10px;text-align:center;
+  transition:transform .05s,box-shadow .05s;text-transform:uppercase;margin-bottom:8px;line-height:1.7;}
 .btn:active{transform:translate(2px,2px)!important;box-shadow:none!important}
 .btn:disabled{cursor:not-allowed;opacity:.28;}
 .btn-g{background:var(--g);color:#000;box-shadow:3px 3px 0 #005522,0 0 10px rgba(0,255,136,.4);}
-.btn-g:not(:disabled):hover{box-shadow:4px 4px 0 #005522,0 0 20px rgba(0,255,136,.65);}
+.btn-g:not(:disabled):hover{box-shadow:4px 4px 0 #005522,0 0 18px rgba(0,255,136,.65);}
 .btn-b{background:var(--b);color:#000;box-shadow:3px 3px 0 #004455,0 0 10px rgba(0,229,255,.4);}
-.btn-b:not(:disabled):hover{box-shadow:4px 4px 0 #004455,0 0 20px rgba(0,229,255,.65);}
-.btn-p{background:var(--p);color:#000;box-shadow:3px 3px 0 #550055,0 0 10px rgba(255,0,255,.4);}
-.btn-p:not(:disabled):hover{box-shadow:4px 4px 0 #550055,0 0 20px rgba(255,0,255,.65);}
-.btn-r{background:var(--r);color:#fff;box-shadow:3px 3px 0 #550011,0 0 10px rgba(255,51,102,.4);}
-.btn-r:not(:disabled):hover{box-shadow:4px 4px 0 #550011,0 0 20px rgba(255,51,102,.65);}
-.btn-a{background:var(--adm);color:#000;box-shadow:3px 3px 0 #1a0033,0 0 10px rgba(176,96,255,.4);}
-.btn-a:not(:disabled):hover{box-shadow:4px 4px 0 #1a0033,0 0 20px rgba(176,96,255,.65);}
-.btn-ghost{background:transparent;color:var(--g);border:2px solid rgba(0,255,136,.3);
-  box-shadow:2px 2px 0 #003322;font-family:'Press Start 2P',monospace;font-size:8px;
+.btn-b:not(:disabled):hover{box-shadow:4px 4px 0 #004455,0 0 18px rgba(0,229,255,.65);}
+.btn-p{background:var(--p);color:#000;box-shadow:3px 3px 0 #440044,0 0 10px rgba(255,0,255,.4);}
+.btn-p:not(:disabled):hover{box-shadow:4px 4px 0 #440044,0 0 18px rgba(255,0,255,.65);}
+.btn-r{background:var(--r);color:#fff;box-shadow:3px 3px 0 #440011,0 0 10px rgba(255,51,102,.4);}
+.btn-r:not(:disabled):hover{box-shadow:4px 4px 0 #440011,0 0 18px rgba(255,51,102,.65);}
+.btn-adm{background:var(--adm);color:#000;box-shadow:3px 3px 0 #220033,0 0 10px rgba(176,96,255,.4);}
+.btn-adm:not(:disabled):hover{box-shadow:4px 4px 0 #220033,0 0 18px rgba(176,96,255,.65);}
+.btn-out{background:transparent;color:var(--g);border:2px solid rgba(0,255,136,.4);
+  box-shadow:2px 2px 0 #002211;font-family:'Press Start 2P',monospace;font-size:8px;
   padding:11px;cursor:pointer;width:100%;text-align:center;margin-bottom:8px;
-  text-transform:uppercase;letter-spacing:.04em;transition:all .1s;}
-.btn-ghost:hover{background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.5);}
+  text-transform:uppercase;transition:background .1s;}
+.btn-out:hover{background:rgba(0,255,136,.07);}
 .btn-sm{font-family:'Press Start 2P',monospace;font-size:7px;border:none;cursor:pointer;
-  padding:8px 12px;text-transform:uppercase;letter-spacing:.04em;transition:transform .05s;}
+  padding:8px 12px;text-transform:uppercase;letter-spacing:.03em;transition:transform .05s;}
 .btn-sm:active{transform:translate(1px,1px);}
-.btn-sm:disabled{opacity:.3;cursor:not-allowed;}
 .btn-sm-g{background:var(--g);color:#000;box-shadow:2px 2px 0 #005522;}
-.btn-sm-r{background:var(--r);color:#fff;box-shadow:2px 2px 0 #550011;}
-.btn-sm-a{background:var(--adm);color:#000;box-shadow:2px 2px 0 #1a0033;}
+.btn-sm-r{background:var(--r);color:#fff;box-shadow:2px 2px 0 #440011;}
+.btn-sm-adm{background:var(--adm);color:#000;box-shadow:2px 2px 0 #220033;}
 
-/* INPUTS */
-input,select{background:rgba(0,0,0,.65);border:2px solid var(--g);
-  box-shadow:inset 0 0 6px rgba(0,255,136,.06),2px 2px 0 #003322;
+/* ── INPUTS ── */
+input,select{background:rgba(0,0,0,.7);border:2px solid var(--g);
+  box-shadow:inset 0 0 6px rgba(0,255,136,.07),2px 2px 0 #002211;
   color:var(--g);font-family:'Press Start 2P',monospace;font-size:8px;
-  padding:12px 10px;width:100%;outline:none;caret-color:var(--g);letter-spacing:.04em;}
-input::placeholder{color:rgba(0,255,136,.2);font-size:7px}
-input:focus,select:focus{box-shadow:inset 0 0 6px rgba(0,255,136,.12),2px 2px 0 #003322,0 0 8px rgba(0,255,136,.2);}
-select option{background:#0a0a0f;color:var(--g);}
-input[readonly]{color:rgba(0,229,255,.5);border-color:rgba(0,229,255,.25);cursor:default;
-  box-shadow:inset 0 0 4px rgba(0,229,255,.04),2px 2px 0 #001a22;}
+  padding:12px 10px;width:100%;outline:none;caret-color:var(--g);}
+input::placeholder{color:rgba(0,255,136,.2);font-size:7px;}
+input:focus,select:focus{box-shadow:inset 0 0 6px rgba(0,255,136,.12),2px 2px 0 #002211,0 0 8px rgba(0,255,136,.2);}
+select option{background:#07070f;color:var(--g);}
+.inp-b{border-color:var(--b)!important;color:var(--b)!important;caret-color:var(--b);}
+.inp-b::placeholder{color:rgba(0,229,255,.2)!important;}
+.inp-b:focus{box-shadow:inset 0 0 6px rgba(0,229,255,.12),2px 2px 0 #001522,0 0 8px rgba(0,229,255,.2)!important;}
 
-/* TYPE */
-.lbl{font-size:6px;color:var(--b);letter-spacing:.15em;display:block;margin-bottom:5px;text-transform:uppercase;}
-.stitle{font-size:8px;color:var(--g);text-shadow:0 0 8px var(--g);margin-bottom:14px;letter-spacing:.06em;}
+/* ── LABELS ── */
+.lbl{font-size:6px;color:var(--b);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
+.lbl-p{font-size:6px;color:var(--p);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
+.lbl-g{font-size:6px;color:var(--g);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
+.lbl-adm{font-size:6px;color:var(--adm);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
+
+/* ── TYPE ── */
+.title{color:var(--g);text-shadow:0 0 10px var(--g),0 0 22px rgba(0,255,136,.35);line-height:1.5;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.blink{animation:blink 1s step-end infinite}
-@keyframes glow{0%,100%{text-shadow:0 0 6px currentColor}50%{text-shadow:0 0 18px currentColor,0 0 36px currentColor}}
-.glow{animation:glow 2.5s ease infinite}
+.blink{animation:blink 1s step-end infinite;}
+@keyframes glow-p{0%,100%{text-shadow:0 0 8px currentColor}50%{text-shadow:0 0 20px currentColor,0 0 40px currentColor}}
+.glow{animation:glow-p 2s ease infinite;}
 
-/* TOAST */
+/* ── TOAST ── */
 .toast{position:absolute;top:10px;left:8px;right:8px;background:#000;
-  border:2px solid var(--y);box-shadow:0 0 12px rgba(255,238,0,.5),2px 2px 0 #333300;
-  color:var(--y);padding:10px 12px;font-size:8px;line-height:1.8;text-align:center;
-  transform:translateY(-90px);transition:transform .18s steps(4);z-index:1000;
+  border:2px solid var(--y);box-shadow:0 0 12px rgba(255,238,0,.5),2px 2px 0 #222200;
+  color:var(--y);padding:10px 12px;font-size:7px;line-height:1.9;text-align:center;
+  transform:translateY(-90px);transition:transform .18s steps(4);z-index:2000;
   text-transform:uppercase;letter-spacing:.04em;}
-.toast.show{transform:translateY(0)}
-.toast.err{border-color:var(--r);color:var(--r);box-shadow:0 0 12px rgba(255,51,102,.5),2px 2px 0 #330011}
-.toast.info{border-color:var(--b);color:var(--b);box-shadow:0 0 12px rgba(0,229,255,.5),2px 2px 0 #001a22}
+.toast.show{transform:translateY(0);}
+.toast.err{border-color:var(--r);color:var(--r);box-shadow:0 0 12px rgba(255,51,102,.5),2px 2px 0 #220011;}
+.toast.info{border-color:var(--b);color:var(--b);box-shadow:0 0 12px rgba(0,229,255,.5),2px 2px 0 #001122;}
+.toast.ok{border-color:var(--g);color:var(--g);box-shadow:0 0 12px rgba(0,255,136,.5),2px 2px 0 #002211;}
 
-/* STAMPS */
-.hp-bar{display:flex;gap:5px;flex-wrap:wrap;}
+/* ── HP PIPS ── */
+.hp-bar{display:flex;gap:4px;flex-wrap:wrap;}
 .hp-pip{width:20px;height:20px;border:2px solid rgba(0,255,136,.18);background:rgba(0,0,0,.5);transition:all .1s steps(2);}
-.hp-pip.on{background:var(--y);border-color:var(--y);box-shadow:0 0 6px rgba(255,238,0,.6);}
-@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.3)}80%{transform:scale(.92)}100%{transform:scale(1)}}
+.hp-pip.on{background:var(--y);border-color:var(--y);box-shadow:0 0 6px rgba(255,238,0,.65);}
+@keyframes pop{0%{transform:scale(.4)}55%{transform:scale(1.4)}80%{transform:scale(.9)}100%{transform:scale(1)}}
 .hp-pip.pop{animation:pop .35s ease forwards;}
 
-/* PROGRESS */
-.prog-wrap{background:#000;border:2px solid rgba(0,255,136,.18);
-  height:14px;position:relative;overflow:hidden;margin-top:6px;}
-.prog-fill{height:100%;background:var(--g);box-shadow:0 0 8px rgba(0,255,136,.5);transition:width .2s steps(8);}
-.prog-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:6px;color:#000;filter:invert(1);font-family:'Press Start 2P',monospace;}
+/* ── PROGRESS ── */
+.prog-wrap{background:#000;border:2px solid rgba(0,255,136,.18);height:13px;position:relative;overflow:hidden;margin-top:5px;}
+.prog-fill{height:100%;background:var(--g);box-shadow:0 0 7px rgba(0,255,136,.55);transition:width .25s steps(8);}
+.prog-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6px;color:#000;filter:invert(1);font-family:'Press Start 2P',monospace;}
 
-/* PIN */
+/* ── PIN PAD ── */
 .pin-row{display:flex;justify-content:center;gap:10px;margin:16px 0;}
-.pin-dot{width:44px;height:50px;background:#000;border:2px solid rgba(0,255,136,.2);
+.pin-dot{width:44px;height:50px;background:#000;border:2px solid rgba(0,255,136,.22);
   display:flex;align-items:center;justify-content:center;transition:all .1s steps(2);}
-.pin-dot.on{border-color:var(--g);box-shadow:0 0 10px rgba(0,255,136,.45);}
-.pin-dot.err{border-color:var(--r);box-shadow:0 0 10px rgba(255,51,102,.45);}
-.pin-pip{width:12px;height:12px;}
+.pin-dot.on{border-color:var(--g);box-shadow:0 0 9px rgba(0,255,136,.45);}
+.pin-dot.on-adm{border-color:var(--adm)!important;box-shadow:0 0 9px rgba(176,96,255,.45)!important;}
+.pin-dot.err{border-color:var(--r);box-shadow:0 0 9px rgba(255,51,102,.45);}
+.pin-pip{width:13px;height:13px;background:var(--g);box-shadow:0 0 6px var(--g);}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:220px;}
 .num{background:#000;border:2px solid rgba(0,255,136,.2);color:var(--g);
   font-family:'Press Start 2P',monospace;font-size:15px;padding:14px 0;
   text-align:center;cursor:pointer;transition:all .05s;}
-.num:hover{border-color:var(--g);background:rgba(0,255,136,.06);box-shadow:0 0 8px rgba(0,255,136,.3);}
+.num:hover{border-color:var(--g);background:rgba(0,255,136,.06);}
 .num:active{transform:translate(1px,1px);}
 .num.blank{background:transparent;border:none;cursor:default;}
+.num-adm{border-color:rgba(176,96,255,.2)!important;color:var(--adm)!important;}
+.num-adm:hover{border-color:var(--adm)!important;background:rgba(176,96,255,.06)!important;}
 
-/* MISC */
-.back{background:none;border:none;color:rgba(0,255,136,.45);
-  font-family:'Press Start 2P',monospace;font-size:7px;cursor:pointer;
-  padding:0;margin-bottom:16px;text-transform:uppercase;letter-spacing:.1em;}
-.back:hover{color:var(--g);}
-.divider{border-top:2px solid rgba(0,255,136,.1);margin:12px 0;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.qr-wrap{display:inline-block;padding:10px;background:#fff;
-  border:3px solid var(--g);box-shadow:0 0 12px rgba(0,255,136,.4);}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}
-  40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
-.shake{animation:shake .3s ease}
+/* ── BOTTOM NAVS ── */
+.nav-bar{display:flex;border-top:2px solid rgba(0,255,136,.2);
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+.nav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(0,255,136,.1);
+  color:rgba(0,255,136,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+  padding:11px 4px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+.nav-btn:last-child{border-right:none;}
+.nav-btn.active{color:var(--g);background:rgba(0,255,136,.05);text-shadow:0 0 6px rgba(0,255,136,.5);
+  border-top:2px solid var(--g);margin-top:-2px;}
+.nav-btn:hover:not(.active){color:rgba(0,255,136,.65);}
+.nav-btn .ni{font-size:13px;display:block;margin-bottom:2px;}
 
-/* REWARD CHIPS */
-.rchip{display:flex;align-items:center;justify-content:space-between;
-  padding:10px 12px;border:2px solid rgba(0,255,136,.25);background:rgba(0,255,136,.04);margin-bottom:6px;}
-.rchip.expiring{border-color:rgba(255,136,0,.5);background:rgba(255,136,0,.05);}
-.rchip.expired{border-color:rgba(255,51,102,.3);background:rgba(255,51,102,.04);opacity:.6;}
+.snav-bar{display:flex;border-top:2px solid rgba(255,0,255,.2);
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+.snav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(255,0,255,.1);
+  color:rgba(255,0,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+.snav-btn:last-child{border-right:none;}
+.snav-btn.active{color:var(--p);background:rgba(255,0,255,.05);text-shadow:0 0 6px rgba(255,0,255,.5);
+  border-top:2px solid var(--p);margin-top:-2px;}
+.snav-btn:hover:not(.active){color:rgba(255,0,255,.65);}
+.snav-btn .ni{font-size:12px;display:block;margin-bottom:2px;}
+/* Admin button in staff nav has its own color */
+.snav-btn.adm-entry{color:rgba(176,96,255,.45)!important;}
+.snav-btn.adm-entry:hover{color:var(--adm)!important;background:rgba(176,96,255,.05)!important;}
 
-/* OFFER BANNERS */
-.offer-banner{background:rgba(0,0,0,.8);border:2px solid var(--o);
-  padding:8px 10px;margin-bottom:8px;display:flex;align-items:center;gap:8px;
-  box-shadow:0 0 10px rgba(255,136,0,.25),2px 2px 0 #221100;}
-.offer-banner .ico{font-size:18px;flex-shrink:0;}
-.offer-banner .txt{font-size:6px;color:var(--o);line-height:2.2;letter-spacing:.06em;}
-.offer-banner.bday{border-color:var(--p);box-shadow:0 0 10px rgba(255,0,255,.25),2px 2px 0 #220022;}
-.offer-banner.bday .txt{color:var(--p);}
+.anav-bar{display:flex;border-top:2px solid rgba(176,96,255,.2);
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+.anav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(176,96,255,.1);
+  color:rgba(176,96,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+.anav-btn:last-child{border-right:none;}
+.anav-btn.active{color:var(--adm);background:rgba(176,96,255,.05);text-shadow:0 0 6px rgba(176,96,255,.5);
+  border-top:2px solid var(--adm);margin-top:-2px;}
+.anav-btn:hover:not(.active){color:rgba(176,96,255,.65);}
+.anav-btn .ni{font-size:12px;display:block;margin-bottom:2px;}
 
-/* SCANNER */
-.scan-box{background:#000;border:2px solid var(--b);
-  box-shadow:0 0 12px rgba(0,229,255,.2);padding:20px;
-  text-align:center;margin-bottom:10px;position:relative;overflow:hidden;}
+/* ── SCANNER ── */
+.scan-box{background:#000;border:2px solid var(--b);box-shadow:0 0 12px rgba(0,229,255,.2);
+  padding:20px;text-align:center;margin-bottom:10px;position:relative;overflow:hidden;}
+.scan-box-adm{border-color:var(--adm)!important;box-shadow:0 0 12px rgba(176,96,255,.2)!important;}
 .sc-corners{width:110px;height:110px;margin:0 auto;position:relative;}
 .corner{position:absolute;width:18px;height:18px;border:3px solid var(--b);}
 .corner.tl{top:0;left:0;border-right:none;border-bottom:none}
@@ -209,541 +203,665 @@ input[readonly]{color:rgba(0,229,255,.5);border-color:rgba(0,229,255,.25);cursor
 .corner.br{bottom:0;right:0;border-left:none;border-top:none}
 .scan-line{position:absolute;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--b),transparent);
-  box-shadow:0 0 8px var(--b);animation:scanA 1.8s linear infinite;}
+  box-shadow:0 0 7px var(--b);animation:scanA 1.8s linear infinite;}
 @keyframes scanA{0%{top:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:100%;opacity:0}}
-#qr-reader{width:100%;max-width:280px;margin:0 auto;}
-#qr-reader video{border:2px solid var(--b)!important;}
-#qr-reader img{display:none!important;}
+#qr-reader,#qr-reader-adm{width:100%;max-width:280px;margin:0 auto;}
+#qr-reader video,#qr-reader-adm video{border:2px solid var(--b)!important;}
+#qr-reader img,#qr-reader-adm img{display:none!important;}
 
-/* CUSTOMER ROWS */
+/* ── CUSTOMER ROWS ── */
 .c-row{display:flex;align-items:center;gap:10px;padding:10px 12px;
-  border-bottom:1px solid rgba(255,0,255,.08);cursor:pointer;transition:background .1s;}
-.c-row:hover,.c-row:active{background:rgba(255,0,255,.07);}
-.c-av{width:34px;height:34px;flex-shrink:0;background:#000;border:2px solid var(--p);
-  box-shadow:0 0 6px rgba(255,0,255,.25);display:flex;align-items:center;
-  justify-content:center;color:var(--p);font-size:13px;}
-.c-av.adm{border-color:var(--adm);color:var(--adm);box-shadow:0 0 6px rgba(176,96,255,.25);}
+  border-bottom:1px solid rgba(255,0,255,.1);cursor:pointer;transition:background .1s;}
+.c-row:hover,.c-row:active{background:rgba(255,0,255,.06);}
+.c-av{width:36px;height:36px;flex-shrink:0;background:#000;border:2px solid var(--p);
+  display:flex;align-items:center;justify-content:center;color:var(--p);font-size:14px;
+  box-shadow:0 0 7px rgba(255,0,255,.25);}
+.c-av-adm{border-color:var(--adm)!important;color:var(--adm)!important;box-shadow:0 0 7px rgba(176,96,255,.25)!important;}
 
-/* STAT CARDS */
-.scard{background:rgba(0,0,0,.4);border:2px solid;padding:12px;text-align:center;}
-.sval{font-size:22px;margin-top:6px;text-shadow:0 0 10px currentColor;}
+/* ── REWARD CHIPS ── */
+.reward-chip{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 11px;border:2px solid rgba(0,255,136,.22);background:rgba(0,255,136,.04);margin-bottom:6px;}
+.reward-chip.warn{border-color:rgba(255,136,0,.45);background:rgba(255,136,0,.04);}
+.reward-chip.dead{border-color:rgba(255,51,102,.3);background:rgba(255,51,102,.04);opacity:.5;}
 
-/* TICKER */
-.ticker-wrap{overflow:hidden;border-top:1px solid rgba(0,255,136,.1);
-  border-bottom:1px solid rgba(0,255,136,.1);padding:6px 0;margin-bottom:14px;}
-.ticker{display:inline-block;white-space:nowrap;font-size:7px;
-  color:rgba(0,255,136,.4);animation:tickAnim 20s linear infinite;letter-spacing:.08em;}
-@keyframes tickAnim{0%{transform:translateX(360px)}100%{transform:translateX(-100%)}}
-
-/* HISTORY */
-.h-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;
-  border-bottom:1px solid rgba(0,229,255,.07);}
-.h-ico{font-size:14px;flex-shrink:0;width:20px;text-align:center;margin-top:1px;}
-.h-txt{flex:1;font-size:7px;color:rgba(0,255,136,.65);line-height:2;}
-.h-date{font-size:6px;color:rgba(0,229,255,.3);white-space:nowrap;}
-
-/* REDEMPTION TABLE */
-.rdm-row{display:flex;align-items:center;gap:8px;padding:8px 10px;
-  border-bottom:1px solid rgba(176,96,255,.08);}
+/* ── MISC ── */
+.back{background:none;border:none;color:rgba(0,255,136,.5);font-family:'Press Start 2P',monospace;
+  font-size:7px;cursor:pointer;padding:0;margin-bottom:14px;text-transform:uppercase;
+  letter-spacing:.08em;display:inline-flex;align-items:center;gap:6px;}
+.back:hover{color:var(--g);}
+.divider{border-top:2px solid rgba(0,255,136,.15);margin:10px 0;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.qr-wrap{display:inline-block;padding:10px;background:#fff;
+  border:3px solid var(--g);box-shadow:0 0 12px rgba(0,255,136,.45);}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.shake{animation:shake .35s ease;}
+.offer-banner{background:rgba(0,0,0,.8);border:2px solid var(--o);padding:8px 10px;
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+  box-shadow:0 0 9px rgba(255,136,0,.25),2px 2px 0 #221100;}
+.ob-icon{font-size:17px;flex-shrink:0;}
+.ob-text{font-size:6px;color:var(--o);line-height:2;letter-spacing:.05em;}
+.offer-banner.bday{border-color:var(--p);box-shadow:0 0 9px rgba(255,0,255,.25),2px 2px 0 #220022;}
+.offer-banner.bday .ob-text{color:var(--p);}
+.ticker-wrap{overflow:hidden;border-top:1px solid rgba(0,255,136,.12);border-bottom:1px solid rgba(0,255,136,.12);padding:5px 0;margin-bottom:12px;}
+.ticker{display:inline-block;white-space:nowrap;font-size:6px;color:rgba(0,255,136,.45);animation:tickerA 24s linear infinite;letter-spacing:.07em;}
+@keyframes tickerA{0%{transform:translateX(360px)}100%{transform:translateX(-100%)}}
+.hist-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,255,136,.07);}
+.hist-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center;margin-top:1px;}
+.hist-text{font-size:6px;color:rgba(0,255,136,.65);line-height:2;flex:1;}
+.hist-date{font-size:5px;color:rgba(0,229,255,.4);margin-top:2px;white-space:nowrap;}
+.tag{display:inline-block;font-size:6px;padding:3px 8px;border:2px solid;letter-spacing:.08em;text-transform:uppercase;}
+.tag-s{border-color:var(--p);color:var(--p);box-shadow:0 0 6px rgba(255,0,255,.3);}
+.tag-a{border-color:var(--adm);color:var(--adm);box-shadow:0 0 6px rgba(176,96,255,.3);}
+.bday-locked{padding:10px;background:rgba(0,0,0,.5);border:2px solid rgba(0,255,136,.18);
+  font-size:7px;color:rgba(0,255,136,.5);letter-spacing:.04em;}
+.rdm-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid rgba(176,96,255,.08);}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(176,96,255,.1);}
 </style>
 </head>
 <body>
 <div class="phone">
 <div class="toast" id="toast"></div>
 
-<!-- ══════ WELCOME ══════ -->
+<!-- ══════════════════════════════════════
+     WELCOME
+══════════════════════════════════════ -->
 <div class="screen active" id="s-welcome"
-     style="align-items:center;text-align:center;justify-content:center;">
-  <div style="font-size:8px;color:var(--b);letter-spacing:.18em;margin-bottom:12px;text-shadow:0 0 8px var(--b)">PRESS START</div>
-  <div style="color:var(--g);font-size:26px;line-height:1.5;
-       text-shadow:0 0 10px var(--g),0 0 20px rgba(0,255,136,.35);margin-bottom:4px;">THE<br>NOOK</div>
-  <div style="font-size:7px;color:var(--p);text-shadow:0 0 8px var(--p);letter-spacing:.06em;margin-bottom:16px;">
-    58 WASHINGTON ST, FAIRHAVEN</div>
-  <div style="font-size:32px;filter:drop-shadow(0 0 10px rgba(0,255,136,.5));margin-bottom:12px;">☕</div>
-  <div class="ticker-wrap" style="width:100%">
-    <span class="ticker">★ COLLECT 10 STAMPS = FREE COFFEE ★ EARN STAMPS EVERY VISIT ★ BIRTHDAY MONTH = FREE COFFEE ★</span>
+     style="align-items:center;text-align:center;justify-content:center;padding-top:18px;">
+  <div style="font-size:7px;color:var(--b);letter-spacing:.18em;margin-bottom:8px;">PRESS START</div>
+  <div class="title" style="font-size:26px;margin-bottom:4px;">THE<br>NOOK</div>
+  <div style="font-size:6px;color:var(--p);letter-spacing:.06em;margin-bottom:12px;">58 WASHINGTON ST, FAIRHAVEN</div>
+  <div style="font-size:28px;filter:drop-shadow(0 0 9px rgba(0,255,136,.6));margin-bottom:10px;">☕</div>
+  <div class="ticker-wrap" style="width:100%;">
+    <span class="ticker">★ 10 STAMPS = FREE COFFEE ★ BIRTHDAY MONTH = FREE COFFEE ★ REWARDS EXPIRE IN 90 DAYS ★ EARN A STAMP EVERY VISIT ★</span>
   </div>
-  <div style="width:100%">
+  <div style="width:100%;margin-bottom:6px;">
     <button class="btn btn-g" onclick="go('s-signin')">[ SIGN IN ]</button>
-    <button class="btn btn-b" onclick="go('s-signup')">[ CREATE ACCOUNT ]</button>
-    <button class="btn-ghost" onclick="go('s-leaderboard')">[ TOP PLAYERS ]</button>
+    <button class="btn btn-b" onclick="go('s-create')">[ CREATE ACCOUNT ]</button>
+    <button class="btn-out" onclick="go('s-leaderboard')" style="margin-bottom:0;">[ TOP PLAYERS ]</button>
   </div>
-  <!-- Staff only — brighter, no admin hint -->
+  <div class="divider" style="width:100%;margin-top:8px;"></div>
   <button onclick="go('s-staff-login')"
-    style="background:none;border:none;color:rgba(255,0,255,.55);
-           font-family:'Press Start 2P',monospace;font-size:6px;cursor:pointer;
-           letter-spacing:.12em;padding:8px;margin-top:24px;
-           text-shadow:0 0 6px rgba(255,0,255,.3);">
-    staff
+    style="background:none;border:none;font-family:'Press Start 2P',monospace;
+           font-size:7px;color:rgba(0,255,136,.55);cursor:pointer;padding:10px 20px;
+           letter-spacing:.12em;text-transform:uppercase;margin-top:2px;
+           text-shadow:0 0 6px rgba(0,255,136,.25);">
+    · STAFF ·
   </button>
 </div>
 
-<!-- ══════ SIGN IN ══════ -->
-<div class="screen" id="s-signin" style="padding-top:8px;">
-  <div class="sa">
+<!-- ══════════════════════════════════════
+     SIGN IN
+══════════════════════════════════════ -->
+<div class="screen" id="s-signin" style="padding-top:4px;">
+  <div class="scroll">
     <button class="back" onclick="go('s-welcome')">◀ BACK</button>
-    <div class="stitle">PLAYER LOGIN</div>
-    <div style="font-size:7px;color:rgba(0,229,255,.5);margin-bottom:18px;line-height:2;">SIGN IN WITH YOUR PHONE NUMBER</div>
-    <div class="card" style="margin-bottom:14px;">
-      <label class="lbl">PHONE NUMBER</label>
-      <input id="si-phone" placeholder="5081234567" type="tel" onkeydown="if(event.key==='Enter')doSignin()"/>
+    <div style="font-size:7px;color:var(--p);letter-spacing:.1em;margin-bottom:10px;">SIGN IN</div>
+    <div class="card-b" style="margin-bottom:12px;">
+      <div class="lbl" style="margin-bottom:8px;">ENTER YOUR PHONE NUMBER</div>
+      <input class="inp-b" id="w-phone" placeholder="5081234567" type="tel"
+             style="margin-bottom:10px;" onkeydown="if(event.key==='Enter')doSignIn()"/>
+      <button class="btn btn-b" onclick="doSignIn()" style="margin-bottom:0;">[ SIGN IN ]</button>
     </div>
-    <button class="btn btn-g" onclick="doSignin()">▶ SIGN IN ◀</button>
-    <div class="divider"></div>
-    <div style="font-size:7px;color:rgba(0,255,136,.25);text-align:center;margin-bottom:12px;">NO ACCOUNT?</div>
-    <button class="btn-ghost" onclick="go('s-signup')">CREATE ACCOUNT</button>
+    <p style="font-size:6px;color:rgba(0,255,136,.2);text-align:center;line-height:2.4;">
+      DON'T HAVE AN ACCOUNT?<br>
+      <button onclick="go('s-create')"
+        style="background:none;border:none;font-family:'Press Start 2P',monospace;
+               font-size:6px;color:rgba(0,255,136,.45);cursor:pointer;padding:4px 0;
+               text-decoration:underline;text-transform:uppercase;">
+        CREATE ONE HERE
+      </button>
+    </p>
   </div>
 </div>
 
-<!-- ══════ SIGN UP ══════ -->
-<div class="screen" id="s-signup" style="padding-top:8px;">
-  <div class="sa">
+<!-- ══════════════════════════════════════
+     CREATE ACCOUNT
+══════════════════════════════════════ -->
+<div class="screen" id="s-create" style="padding-top:4px;">
+  <div class="scroll">
     <button class="back" onclick="go('s-welcome')">◀ BACK</button>
-    <div class="stitle">CREATE ACCOUNT</div>
+    <div style="font-size:7px;color:var(--p);letter-spacing:.1em;margin-bottom:10px;">NEW PLAYER</div>
     <div class="card" style="margin-bottom:12px;">
       <div style="margin-bottom:12px;">
         <label class="lbl">YOUR NAME</label>
-        <input id="su-name" placeholder="E.G. MARGARITA"/>
+        <input id="c-name" placeholder="E.G. MARGARITA"/>
       </div>
       <div style="margin-bottom:12px;">
         <label class="lbl">PHONE (10 DIGITS)</label>
-        <input id="su-phone" placeholder="5081234567" type="tel"/>
+        <input id="c-phone" placeholder="5081234567" type="tel"/>
       </div>
       <div>
-        <label class="lbl">BIRTHDAY (OPTIONAL — CANNOT BE CHANGED LATER)</label>
+        <label class="lbl">BIRTHDAY (OPTIONAL)</label>
+        <div style="font-size:5px;color:rgba(0,255,136,.3);margin-bottom:6px;line-height:2;letter-spacing:.06em;">
+          ⚠ CANNOT BE CHANGED AFTER JOINING
+        </div>
         <div style="display:grid;grid-template-columns:2fr 1fr 2fr;gap:6px;">
-          <select id="su-bm" style="font-size:7px;padding:11px 6px;" onchange="buildDays('su')">
+          <select id="c-bm" onchange="populateDays('c-bm','c-bd','c-by')">
             <option value="">MONTH</option>
-            <option value="1">JAN</option><option value="2">FEB</option><option value="3">MAR</option>
-            <option value="4">APR</option><option value="5">MAY</option><option value="6">JUN</option>
-            <option value="7">JUL</option><option value="8">AUG</option><option value="9">SEP</option>
+            <option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option>
+            <option value="04">APR</option><option value="05">MAY</option><option value="06">JUN</option>
+            <option value="07">JUL</option><option value="08">AUG</option><option value="09">SEP</option>
             <option value="10">OCT</option><option value="11">NOV</option><option value="12">DEC</option>
           </select>
-          <select id="su-bd" style="font-size:7px;padding:11px 6px;"><option value="">DAY</option></select>
-          <select id="su-by" style="font-size:7px;padding:11px 6px;" onchange="buildDays('su')"><option value="">YEAR</option></select>
+          <select id="c-bd" style="font-size:7px;padding:10px 4px;"><option value="">DD</option></select>
+          <select id="c-by" onchange="populateDays('c-bm','c-bd','c-by')" style="font-size:7px;padding:10px 4px;">
+            <option value="">YEAR</option></select>
         </div>
       </div>
     </div>
-    <button class="btn btn-g" onclick="doSignup()">▶ CREATE ACCOUNT ◀</button>
-    <div style="font-size:6px;color:rgba(0,255,136,.18);text-align:center;margin-top:2px;">FREE TO JOIN · NO SPAM</div>
+    <button class="btn btn-g" onclick="doCreate()">▶ JOIN THE NOOK ◀</button>
+    <p style="font-size:6px;color:rgba(0,255,136,.2);text-align:center;margin-top:4px;line-height:2;">FREE TO JOIN · NO SPAM</p>
   </div>
 </div>
 
-<!-- ══════ CUSTOMER HOME (3 tabs) ══════ -->
-<div class="screen" id="s-cust-home" style="padding-top:8px;">
-
-  <!-- REWARDS TAB -->
-  <div class="sa" id="ctab-rewards">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div>
-        <div id="ch-name" style="font-size:9px;color:var(--y);text-shadow:0 0 6px var(--y);"></div>
-        <div id="ch-id"   style="font-size:6px;color:rgba(0,229,255,.3);margin-top:3px;"></div>
+<!-- ══════════════════════════════════════
+     CUSTOMER: REWARDS CARD
+══════════════════════════════════════ -->
+<div class="screen" id="s-c-rewards" style="padding-top:4px;">
+  <div class="scroll">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:9px;color:var(--g);text-shadow:0 0 6px var(--g);" id="c-header-name"></div>
+      <div style="font-size:6px;color:rgba(0,255,136,.35);">MY CARD</div>
+    </div>
+    <div id="c-offers"></div>
+    <div class="card-b" style="text-align:center;margin-bottom:9px;">
+      <div class="lbl" style="margin-bottom:8px;text-align:center;">SHOW AT CHECKOUT</div>
+      <div class="qr-wrap"><div id="c-qr" style="width:110px;height:110px;"></div></div>
+      <div style="font-size:5px;color:rgba(0,229,255,.28);margin-top:7px;" id="c-qr-id"></div>
+    </div>
+    <div class="card" style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:7px;">
+        <span style="font-size:7px;color:var(--g);">☕ COFFEE CARD</span>
+        <span id="c-stamp-lbl" style="font-size:8px;color:var(--y);text-shadow:0 0 5px rgba(255,238,0,.6);"></span>
       </div>
-      <button onclick="doSignout()"
-        style="background:none;border:1px solid rgba(255,51,102,.3);color:rgba(255,51,102,.55);
-               font-family:'Press Start 2P',monospace;font-size:6px;padding:6px 10px;cursor:pointer;">OUT</button>
+      <div class="hp-bar" id="c-stamps"></div>
+      <div class="prog-wrap"><div class="prog-fill" id="c-prog"></div><div class="prog-text" id="c-prog-t"></div></div>
     </div>
-    <div id="ch-offers"></div>
-    <div class="card-b" style="text-align:center;margin-bottom:10px;">
-      <div style="font-size:6px;color:var(--b);letter-spacing:.1em;margin-bottom:8px;">SHOW THIS AT CHECKOUT</div>
-      <div class="qr-wrap"><div id="ch-qr" style="width:110px;height:110px;"></div></div>
-    </div>
-    <div class="card" style="margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span style="font-size:7px;color:rgba(0,255,136,.5);">☕ STAMP PROGRESS</span>
-        <span id="ch-sc" style="color:var(--y);font-size:8px;text-shadow:0 0 6px var(--y);"></span>
-      </div>
-      <div class="hp-bar" id="ch-stamps"></div>
-      <div class="prog-wrap"><div class="prog-fill" id="ch-prog"></div>
-        <div class="prog-text" id="ch-prog-t"></div></div>
-    </div>
-    <div class="card" style="margin-bottom:10px;">
-      <div style="font-size:7px;color:rgba(0,255,136,.5);margin-bottom:10px;">🏆 FREE COFFEES EARNED</div>
-      <div id="ch-rewards-list"></div>
+    <div class="card" style="margin-bottom:8px;">
+      <div style="font-size:7px;color:rgba(0,255,136,.5);margin-bottom:8px;">🏆 FREE COFFEES EARNED</div>
+      <div id="c-rewards-list"></div>
     </div>
     <div class="g2">
-      <div class="card" style="text-align:center;margin-bottom:0;">
-        <div style="font-size:5px;color:var(--b);margin-bottom:6px;">REDEEMED</div>
-        <div style="font-size:22px;color:var(--y);text-shadow:0 0 10px var(--y);" id="ch-total-r">0</div>
+      <div class="card" style="text-align:center;margin-bottom:0;padding:10px;">
+        <div style="font-size:5px;color:var(--b);margin-bottom:5px;">REDEEMED</div>
+        <div style="font-size:20px;color:var(--y);text-shadow:0 0 10px var(--y);" id="c-total-r">0</div>
       </div>
-      <div class="card" style="text-align:center;margin-bottom:0;">
-        <div style="font-size:5px;color:var(--b);margin-bottom:6px;">TOTAL VISITS</div>
-        <div style="font-size:22px;color:var(--g);text-shadow:0 0 10px var(--g);" id="ch-visits">0</div>
+      <div class="card" style="text-align:center;margin-bottom:0;padding:10px;">
+        <div style="font-size:5px;color:var(--b);margin-bottom:5px;">VISITS</div>
+        <div style="font-size:20px;color:var(--g);text-shadow:0 0 10px var(--g);" id="c-total-v">0</div>
       </div>
     </div>
   </div>
-
-  <!-- HISTORY TAB -->
-  <div class="sa" id="ctab-hist" style="display:none;">
-    <div class="stitle">📜 VISIT HISTORY</div>
-    <div class="card-b" style="padding:8px 12px;"><div id="ch-hist-list"></div></div>
-  </div>
-
-  <!-- SETTINGS TAB -->
-  <div class="sa" id="ctab-settings" style="display:none;">
-    <div class="stitle">⚙ ACCOUNT</div>
-    <div class="card" style="margin-bottom:12px;">
-      <div style="padding:8px 0;border-bottom:1px solid rgba(0,255,136,.08);
-           display:flex;justify-content:space-between;">
-        <span style="font-size:6px;color:rgba(0,255,136,.4);">PLAYER ID</span>
-        <span style="font-size:6px;color:var(--b);" id="set-id"></span>
-      </div>
-      <div style="padding:8px 0;display:flex;justify-content:space-between;">
-        <span style="font-size:6px;color:rgba(0,255,136,.4);">PHONE</span>
-        <span style="font-size:6px;color:var(--b);" id="set-phone"></span>
-      </div>
-    </div>
-    <div class="card" style="margin-bottom:12px;">
-      <div style="font-size:6px;color:var(--b);margin-bottom:12px;">EDIT DETAILS</div>
-      <div style="margin-bottom:12px;">
-        <label class="lbl">NAME</label>
-        <input id="set-name-inp"/>
-      </div>
-      <!-- Birthday: read-only if already set -->
-      <div id="set-bday-wrap">
-        <label class="lbl">BIRTHDAY</label>
-        <div id="set-bday-display" style="display:none;">
-          <input id="set-bday-ro" readonly style="cursor:default;"/>
-          <div style="font-size:6px;color:rgba(0,229,255,.3);margin-top:5px;line-height:2;">
-            BIRTHDAY CANNOT BE CHANGED AFTER ACCOUNT CREATION
-          </div>
-        </div>
-        <div id="set-bday-edit" style="display:none;">
-          <div style="display:grid;grid-template-columns:2fr 1fr 2fr;gap:6px;">
-            <select id="set-bm" style="font-size:7px;padding:11px 6px;" onchange="buildDays('set')">
-              <option value="">MONTH</option>
-              <option value="1">JAN</option><option value="2">FEB</option><option value="3">MAR</option>
-              <option value="4">APR</option><option value="5">MAY</option><option value="6">JUN</option>
-              <option value="7">JUL</option><option value="8">AUG</option><option value="9">SEP</option>
-              <option value="10">OCT</option><option value="11">NOV</option><option value="12">DEC</option>
-            </select>
-            <select id="set-bd" style="font-size:7px;padding:11px 6px;"><option value="">DAY</option></select>
-            <select id="set-by" style="font-size:7px;padding:11px 6px;" onchange="buildDays('set')"><option value="">YEAR</option></select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-g" onclick="saveSettings()">▶ SAVE CHANGES ◀</button>
-    <div class="divider"></div>
-    <button class="btn btn-r" onclick="doSignout()">SIGN OUT</button>
-  </div>
-
-  <div class="bnav">
-    <button class="nb on" id="cnb-rewards"  onclick="cTab('rewards')"><span class="ni">☕</span>REWARDS</button>
-    <button class="nb"    id="cnb-hist"     onclick="cTab('hist')"><span class="ni">📜</span>HISTORY</button>
-    <button class="nb"    id="cnb-settings" onclick="cTab('settings')"><span class="ni">⚙</span>SETTINGS</button>
+  <div class="nav-bar">
+    <button class="nav-btn active" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
+    <button class="nav-btn" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
+    <button class="nav-btn" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
+    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
-<!-- ══════ LEADERBOARD ══════ -->
-<div class="screen" id="s-leaderboard" style="padding-top:8px;">
-  <div class="sa">
+<!-- ══════════════════════════════════════
+     CUSTOMER: HISTORY
+══════════════════════════════════════ -->
+<div class="screen" id="s-c-history" style="padding-top:4px;">
+  <div class="scroll">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:8px;color:var(--g);" id="c-hist-name"></div>
+      <div style="font-size:6px;color:rgba(0,255,136,.35);">VISIT LOG</div>
+    </div>
+    <div class="card-p" style="padding:10px 12px;">
+      <div class="lbl-p" style="margin-bottom:9px;">📜 FULL HISTORY</div>
+      <div id="c-history-list"></div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
+    <button class="nav-btn active" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
+    <button class="nav-btn" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
+    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CUSTOMER: SETTINGS
+══════════════════════════════════════ -->
+<div class="screen" id="s-c-settings" style="padding-top:4px;">
+  <div class="scroll">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:8px;color:var(--g);" id="c-set-name"></div>
+      <div style="font-size:6px;color:rgba(0,255,136,.35);">SETTINGS</div>
+    </div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="lbl-g" style="margin-bottom:10px;">⚙ ACCOUNT DETAILS</div>
+      <div style="margin-bottom:12px;">
+        <label class="lbl">DISPLAY NAME</label>
+        <input id="s-name" placeholder="YOUR NAME"/>
+      </div>
+      <div>
+        <label class="lbl">BIRTHDAY</label>
+        <!-- Locked state: shown when birthday is already set -->
+        <div id="s-bday-locked" style="display:none;">
+          <div class="bday-locked" id="s-bday-val"></div>
+          <div style="font-size:5px;color:rgba(0,255,136,.25);margin-top:5px;line-height:2;letter-spacing:.06em;">
+            🔒 BIRTHDAY IS LOCKED AND CANNOT BE CHANGED
+          </div>
+        </div>
+        <!-- Dropdowns: shown only if birthday NOT set yet -->
+        <div id="s-bday-dropdowns">
+          <div style="display:grid;grid-template-columns:2fr 1fr 2fr;gap:6px;">
+            <select id="s-bm" onchange="populateDays('s-bm','s-bd','s-by')">
+              <option value="">MONTH</option>
+              <option value="01">JAN</option><option value="02">FEB</option><option value="03">MAR</option>
+              <option value="04">APR</option><option value="05">MAY</option><option value="06">JUN</option>
+              <option value="07">JUL</option><option value="08">AUG</option><option value="09">SEP</option>
+              <option value="10">OCT</option><option value="11">NOV</option><option value="12">DEC</option>
+            </select>
+            <select id="s-bd" style="font-size:7px;padding:10px 4px;"><option value="">DD</option></select>
+            <select id="s-by" onchange="populateDays('s-bm','s-bd','s-by')" style="font-size:7px;padding:10px 4px;"><option value="">YEAR</option></select>
+          </div>
+          <div style="font-size:5px;color:rgba(0,255,136,.25);margin-top:5px;line-height:2;">
+            SET ONCE — LOCKED AFTER SAVING
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-g" onclick="doSaveSettings()">💾 SAVE CHANGES</button>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="lbl" style="margin-bottom:7px;">ACCOUNT INFO</div>
+      <div style="font-size:6px;color:rgba(0,229,255,.5);line-height:2.8;">
+        ID: <span id="s-id" style="color:var(--b);"></span><br>
+        PHONE: <span id="s-phone" style="color:var(--b);"></span><br>
+        MEMBER SINCE: <span id="s-since" style="color:var(--b);"></span>
+      </div>
+    </div>
+    <button class="btn btn-r" onclick="doSignOut()" style="margin-top:4px;">SIGN OUT</button>
+  </div>
+  <div class="nav-bar">
+    <button class="nav-btn" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
+    <button class="nav-btn" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
+    <button class="nav-btn active" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
+    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEADERBOARD
+══════════════════════════════════════ -->
+<div class="screen" id="s-leaderboard" style="padding-top:4px;">
+  <div class="scroll">
     <button class="back" onclick="go('s-welcome')">◀ BACK</button>
     <div style="text-align:center;margin-bottom:14px;">
-      <div style="font-size:15px;color:var(--y);letter-spacing:.08em;" class="glow">★ TOP PLAYERS ★</div>
+      <div style="font-size:14px;color:var(--y);letter-spacing:.08em;" class="glow">★ TOP PLAYERS ★</div>
     </div>
     <div class="card" style="padding:4px 0;"><div id="lb-list"></div></div>
   </div>
 </div>
 
-<!-- ══════ STAFF LOGIN ══════ -->
-<div class="screen" id="s-staff-login" style="padding-top:8px;">
-  <div class="sa" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
-    <button class="back" style="align-self:flex-start;margin-bottom:20px;" onclick="go('s-welcome')">◀ BACK</button>
-    <div style="font-size:28px;margin-bottom:12px;filter:drop-shadow(0 0 10px var(--p))">🔐</div>
-    <div style="font-size:10px;color:var(--p);text-shadow:0 0 10px var(--p);margin-bottom:4px;">STAFF ACCESS</div>
-    <div style="font-size:6px;color:rgba(255,0,255,.35);margin-bottom:4px;letter-spacing:.1em;">ENTER 4-DIGIT PIN</div>
-    <div class="pin-row" id="spin-row">
-      <div class="pin-dot" id="sp0"></div><div class="pin-dot" id="sp1"></div>
-      <div class="pin-dot" id="sp2"></div><div class="pin-dot" id="sp3"></div>
-    </div>
-    <div id="spin-err" style="font-size:7px;color:var(--r);min-height:16px;margin-bottom:10px;"></div>
-    <div class="numpad">
-      <div class="num" onclick="pinPress('s',1)">1</div><div class="num" onclick="pinPress('s',2)">2</div><div class="num" onclick="pinPress('s',3)">3</div>
-      <div class="num" onclick="pinPress('s',4)">4</div><div class="num" onclick="pinPress('s',5)">5</div><div class="num" onclick="pinPress('s',6)">6</div>
-      <div class="num" onclick="pinPress('s',7)">7</div><div class="num" onclick="pinPress('s',8)">8</div><div class="num" onclick="pinPress('s',9)">9</div>
-      <div class="num blank"></div><div class="num" onclick="pinPress('s',0)">0</div>
-      <div class="num" onclick="pinPress('s','del')">⌫</div>
-    </div>
+<!-- ══════════════════════════════════════
+     STAFF LOGIN
+══════════════════════════════════════ -->
+<div class="screen" id="s-staff-login"
+     style="align-items:center;justify-content:center;text-align:center;padding-top:20px;">
+  <div style="font-size:26px;margin-bottom:10px;filter:drop-shadow(0 0 9px var(--p))">🔐</div>
+  <div style="font-size:10px;color:var(--p);text-shadow:0 0 10px var(--p);margin-bottom:4px;">STAFF ACCESS</div>
+  <div style="font-size:6px;color:rgba(255,0,255,.4);margin-bottom:4px;letter-spacing:.1em;">THE NOOK · FAIRHAVEN</div>
+  <div class="pin-row" id="spin-row">
+    <div class="pin-dot" id="spd0"></div><div class="pin-dot" id="spd1"></div>
+    <div class="pin-dot" id="spd2"></div><div class="pin-dot" id="spd3"></div>
   </div>
+  <div id="spin-err" style="font-size:7px;color:var(--r);min-height:16px;margin-bottom:10px;letter-spacing:.08em;"></div>
+  <div class="numpad">
+    <div class="num" onclick="staffPinPress(1)">1</div><div class="num" onclick="staffPinPress(2)">2</div><div class="num" onclick="staffPinPress(3)">3</div>
+    <div class="num" onclick="staffPinPress(4)">4</div><div class="num" onclick="staffPinPress(5)">5</div><div class="num" onclick="staffPinPress(6)">6</div>
+    <div class="num" onclick="staffPinPress(7)">7</div><div class="num" onclick="staffPinPress(8)">8</div><div class="num" onclick="staffPinPress(9)">9</div>
+    <div class="num blank"></div><div class="num" onclick="staffPinPress(0)">0</div><div class="num" onclick="staffPinPress('del')">⌫</div>
+  </div>
+  <button class="btn-out" style="width:200px;margin-top:8px;" onclick="go('s-welcome')">CANCEL</button>
 </div>
 
-<!-- ══════ ADMIN LOGIN (reached from staff home) ══════ -->
-<div class="screen" id="s-admin-login" style="padding-top:8px;">
-  <div class="sa" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
-    <button class="back" style="align-self:flex-start;margin-bottom:20px;" onclick="go('s-staff-home')">◀ STAFF</button>
-    <div style="font-size:28px;margin-bottom:12px;filter:drop-shadow(0 0 10px var(--adm))">🛡</div>
-    <div style="font-size:10px;color:var(--adm);text-shadow:0 0 10px var(--adm);margin-bottom:4px;">ADMIN ACCESS</div>
-    <div style="font-size:6px;color:rgba(176,96,255,.35);margin-bottom:4px;letter-spacing:.1em;">ENTER ADMIN PIN</div>
-    <div class="pin-row" id="apin-row">
-      <div class="pin-dot" id="ap0" style="border-color:rgba(176,96,255,.2);"></div>
-      <div class="pin-dot" id="ap1" style="border-color:rgba(176,96,255,.2);"></div>
-      <div class="pin-dot" id="ap2" style="border-color:rgba(176,96,255,.2);"></div>
-      <div class="pin-dot" id="ap3" style="border-color:rgba(176,96,255,.2);"></div>
-    </div>
-    <div id="apin-err" style="font-size:7px;color:var(--r);min-height:16px;margin-bottom:10px;"></div>
-    <div class="numpad">
-      <div class="num" onclick="pinPress('a',1)">1</div><div class="num" onclick="pinPress('a',2)">2</div><div class="num" onclick="pinPress('a',3)">3</div>
-      <div class="num" onclick="pinPress('a',4)">4</div><div class="num" onclick="pinPress('a',5)">5</div><div class="num" onclick="pinPress('a',6)">6</div>
-      <div class="num" onclick="pinPress('a',7)">7</div><div class="num" onclick="pinPress('a',8)">8</div><div class="num" onclick="pinPress('a',9)">9</div>
-      <div class="num blank"></div><div class="num" onclick="pinPress('a',0)">0</div>
-      <div class="num" onclick="pinPress('a','del')">⌫</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ STAFF HOME ══════ -->
-<div class="screen" id="s-staff-home" style="padding-top:8px;">
+<!-- ══════════════════════════════════════
+     STAFF HOME — PLAYERS TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-staff-home" style="padding-top:4px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
-    <div style="font-size:9px;color:var(--p);text-shadow:0 0 8px var(--p);">THE NOOK</div>
-    <span style="background:#000;border:2px solid var(--p);color:var(--p);
-                 font-size:6px;padding:4px 8px;box-shadow:0 0 8px rgba(255,0,255,.3);">STAFF</span>
+    <div style="font-size:8px;color:var(--p);text-shadow:0 0 6px var(--p);">THE NOOK</div>
+    <span class="tag tag-s">STAFF</span>
   </div>
-
-  <!-- LIST TAB -->
-  <div class="sa" id="stab-list">
-    <input id="staff-search" placeholder="SEARCH NAME / PHONE..." style="margin-bottom:10px;" oninput="renderStaffList()"/>
-    <div id="staff-list" style="border:2px solid var(--p);box-shadow:3px 3px 0 #330033;overflow:hidden;"></div>
+  <div class="scroll">
+    <input id="staff-search" placeholder="SEARCH BY NAME OR PHONE..."
+           style="font-size:7px;border-color:var(--p);color:var(--p);margin-bottom:10px;"
+           oninput="renderCustomerList()"/>
+    <div class="g2" style="margin-bottom:10px;">
+      <div class="card-p" style="margin-bottom:0;text-align:center;padding:9px;">
+        <div style="font-size:5px;color:var(--p);margin-bottom:4px;">MEMBERS</div>
+        <div style="font-size:20px;color:var(--p);text-shadow:0 0 10px var(--p);" id="sh-members">0</div>
+      </div>
+      <div class="card-b" style="margin-bottom:0;text-align:center;padding:9px;">
+        <div style="font-size:5px;color:var(--b);margin-bottom:4px;">TOTAL VISITS</div>
+        <div style="font-size:20px;color:var(--b);text-shadow:0 0 10px var(--b);" id="sh-visits">0</div>
+      </div>
+    </div>
+    <div class="card-p" style="padding:0;overflow:hidden;">
+      <div style="padding:9px 12px 7px;border-bottom:1px solid rgba(255,0,255,.15);">
+        <div class="lbl-p">ALL PLAYERS</div>
+      </div>
+      <div id="staff-customer-list" style="max-height:220px;overflow-y:auto;"></div>
+    </div>
   </div>
+  <div class="snav-bar">
+    <button class="snav-btn active" id="snb-players" onclick="go('s-staff-home')">
+      <span class="ni">👥</span>PLAYERS</button>
+    <button class="snav-btn" id="snb-scan" onclick="staffGoScan()">
+      <span class="ni">📷</span>SCANNER</button>
+    <button class="snav-btn adm-entry" onclick="go('s-admin-login')">
+      <span class="ni">🛡</span>ADMIN</button>
+    <button class="snav-btn" style="color:rgba(255,51,102,.35);" onclick="doStaffLogout()">
+      <span class="ni">⏻</span>LOGOUT</button>
+  </div>
+</div>
 
-  <!-- SCAN TAB -->
-  <div class="sa" id="stab-scan" style="display:none;">
+<!-- ══════════════════════════════════════
+     STAFF — SCANNER TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-staff-scanner" style="padding-top:4px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
+    <div style="font-size:8px;color:var(--p);">QR SCANNER</div>
+    <span class="tag tag-s">STAFF</span>
+  </div>
+  <div class="scroll">
     <div class="scan-box">
       <div id="qr-reader"></div>
-      <div id="scan-ph">
+      <div id="scan-placeholder">
         <div class="sc-corners">
           <div class="corner tl"></div><div class="corner tr"></div>
           <div class="corner bl"></div><div class="corner br"></div>
           <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;">
             <div style="font-size:26px;">📷</div>
-            <div style="font-size:6px;color:var(--b);letter-spacing:.08em;" class="blink">READY</div>
+            <div style="font-size:6px;color:var(--b);" class="blink">READY</div>
           </div>
           <div class="scan-line"></div>
         </div>
       </div>
     </div>
-    <button class="btn btn-b" id="btn-cam" onclick="toggleCamera('s')">▶ START CAMERA SCAN</button>
-    <div class="card-b" style="margin-top:4px;">
-      <div style="font-size:6px;color:var(--b);letter-spacing:.1em;margin-bottom:8px;">PHONE LOOKUP</div>
+    <button class="btn btn-b" id="btn-cam" onclick="toggleCamera()" style="margin-top:6px;">▶ START CAMERA</button>
+    <div class="card-b" style="margin-top:6px;">
+      <div class="lbl" style="margin-bottom:8px;">LOOKUP BY PHONE</div>
       <div style="display:flex;gap:6px;">
         <input id="scan-phone" placeholder="5081234567" type="tel" style="font-size:7px;"
-               onkeydown="if(event.key==='Enter')doPhoneScan('s')"/>
-        <button class="btn btn-b" style="width:auto;padding:12px 12px;margin-bottom:0;flex-shrink:0;font-size:8px;"
-                onclick="doPhoneScan('s')">GO</button>
+               onkeydown="if(event.key==='Enter')doPhoneScan()"/>
+        <button class="btn btn-b" style="width:auto;padding:12px;margin-bottom:0;flex-shrink:0;"
+                onclick="doPhoneScan()">GO</button>
       </div>
     </div>
   </div>
-
-  <div class="bnav sm">
-    <button class="nb on" id="snb-list" onclick="sTab('list')"><span class="ni">👥</span>CUSTOMERS</button>
-    <button class="nb"    id="snb-scan" onclick="sTab('scan')"><span class="ni">📷</span>SCANNER</button>
-    <button class="nb"    onclick="go('s-welcome')"><span class="ni">🔒</span>LOGOUT</button>
-    <button class="nb"    onclick="go('s-admin-login')"
-      style="border-top:2px solid transparent;"
-      onmouseover="this.style.color='var(--adm)'"
-      onmouseout="this.style.color='rgba(176,96,255,.4)'">
-      <span class="ni" style="color:var(--adm);opacity:.7;">🛡</span>
-      <span style="color:rgba(176,96,255,.45);">ADMIN</span>
-    </button>
+  <div class="snav-bar">
+    <button class="snav-btn" onclick="go('s-staff-home')">
+      <span class="ni">👥</span>PLAYERS</button>
+    <button class="snav-btn active" onclick="staffGoScan()">
+      <span class="ni">📷</span>SCANNER</button>
+    <button class="snav-btn adm-entry" onclick="go('s-admin-login')">
+      <span class="ni">🛡</span>ADMIN</button>
+    <button class="snav-btn" style="color:rgba(255,51,102,.35);" onclick="doStaffLogout()">
+      <span class="ni">⏻</span>LOGOUT</button>
   </div>
 </div>
 
-<!-- ══════ STAMP SCREEN (staff + admin shared) ══════ -->
-<div class="screen" id="s-stamp" style="padding-top:8px;">
+<!-- ══════════════════════════════════════
+     STAFF DETAIL (stamp screen)
+══════════════════════════════════════ -->
+<div class="screen" id="s-staff-detail" style="padding-top:4px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
-    <button class="back" style="margin-bottom:0;" id="stamp-back-btn" onclick="stampGoBack()">◀ BACK</button>
-    <span style="background:#000;border:2px solid var(--p);color:var(--p);
-                 font-size:6px;padding:4px 8px;box-shadow:0 0 8px rgba(255,0,255,.3);">LOYALTY CARD</span>
+    <button class="back" style="margin-bottom:0;" onclick="go('s-staff-home')">◀ PLAYERS</button>
+    <span class="tag tag-s">STAFF VIEW</span>
   </div>
-  <div class="sa">
-    <div id="st-offers" style="margin-bottom:6px;"></div>
-    <div class="card-p" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-      <div style="width:42px;height:42px;flex-shrink:0;background:#000;border:2px solid var(--p);
-           box-shadow:0 0 8px rgba(255,0,255,.3);display:flex;align-items:center;
-           justify-content:center;color:var(--p);font-size:17px;" id="st-av"></div>
-      <div>
-        <div id="st-cname"  style="color:var(--y);font-size:10px;text-shadow:0 0 6px var(--y);margin-bottom:3px;"></div>
-        <div id="st-cphone" style="font-size:6px;color:rgba(0,229,255,.4);margin-bottom:2px;"></div>
-        <div id="st-cmeta"  style="font-size:6px;color:rgba(255,0,255,.35);"></div>
+  <div class="scroll">
+    <div class="card-p" style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+      <div class="c-av" style="width:44px;height:44px;font-size:18px;" id="sd-avatar"></div>
+      <div style="flex:1;">
+        <div id="sd-name" style="font-size:10px;color:var(--y);text-shadow:0 0 6px rgba(255,238,0,.5);margin-bottom:3px;"></div>
+        <div id="sd-meta" style="font-size:6px;color:rgba(255,0,255,.45);letter-spacing:.04em;line-height:2.2;white-space:pre-line;"></div>
       </div>
     </div>
+    <div id="sd-offers" style="margin-bottom:4px;"></div>
     <div class="card" style="margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="color:var(--g);font-size:7px;">☕ STAMPS</span>
-        <span id="st-slabel" style="color:var(--y);font-size:8px;"></span>
-        <span id="st-ready" style="display:none;font-size:6px;color:var(--y);" class="blink">★ READY ★</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+        <span style="font-size:7px;color:var(--g);">☕ STAMPS</span>
+        <span id="sd-stamp-lbl" style="font-size:7px;color:var(--y);"></span>
+        <span id="sd-ready" class="blink" style="display:none;font-size:6px;color:var(--y);">★ READY ★</span>
       </div>
-      <div class="hp-bar" id="st-stamps"></div>
-      <div class="prog-wrap"><div class="prog-fill" id="st-prog"></div>
-        <div class="prog-text" id="st-prog-t"></div></div>
+      <div class="hp-bar" id="sd-stamps"></div>
+      <div class="prog-wrap"><div class="prog-fill" id="sd-prog"></div><div class="prog-text" id="sd-prog-t"></div></div>
     </div>
     <div class="card" style="margin-bottom:8px;">
-      <div style="font-size:7px;color:rgba(0,255,136,.4);margin-bottom:8px;">🏆 PENDING FREE COFFEES</div>
-      <div id="st-rewards-list"></div>
+      <div style="font-size:7px;color:rgba(0,255,136,.45);margin-bottom:8px;">🏆 PENDING REWARDS</div>
+      <div id="sd-rewards-list"></div>
     </div>
-    <button class="btn btn-g" id="btn-add"    onclick="addStamp()">+ ADD STAMP ☕</button>
-    <button class="btn btn-r" id="btn-redeem" onclick="redeemCoffee()">★ REDEEM FREE COFFEE ★</button>
-    <button class="btn btn-p" id="btn-bday"   style="display:none;" onclick="grantBirthday()">🎂 GRANT BIRTHDAY REWARD</button>
-    <div style="font-size:6px;color:rgba(0,255,136,.25);text-align:center;" id="st-cooldown"></div>
+    <button class="btn btn-g" id="sd-btn-add" onclick="sdAddStamp()">+ ADD STAMP ☕</button>
+    <button class="btn btn-r" id="sd-btn-redeem" onclick="sdRedeemCoffee()">★ REDEEM FREE COFFEE ★</button>
+    <button class="btn btn-p" id="sd-btn-bday" style="display:none;" onclick="sdGrantBirthday()">🎂 GRANT BIRTHDAY REWARD</button>
+    <div style="font-size:6px;color:rgba(0,255,136,.25);text-align:center;margin-top:2px;" id="sd-cooldown"></div>
   </div>
 </div>
 
-<!-- ══════ ADMIN HOME (4 tabs) ══════ -->
-<div class="screen" id="s-admin-home" style="padding-top:8px;">
+<!-- ══════════════════════════════════════
+     ADMIN LOGIN
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-login"
+     style="align-items:center;justify-content:center;text-align:center;padding-top:20px;">
+  <div style="font-size:26px;margin-bottom:10px;filter:drop-shadow(0 0 9px var(--adm))">🛡</div>
+  <div style="font-size:10px;color:var(--adm);text-shadow:0 0 10px var(--adm);margin-bottom:4px;">ADMIN ACCESS</div>
+  <div style="font-size:6px;color:rgba(176,96,255,.4);margin-bottom:4px;letter-spacing:.1em;">THE NOOK · FAIRHAVEN</div>
+  <div class="pin-row" id="apin-row">
+    <div class="pin-dot" id="apd0" style="border-color:rgba(176,96,255,.22);"></div>
+    <div class="pin-dot" id="apd1" style="border-color:rgba(176,96,255,.22);"></div>
+    <div class="pin-dot" id="apd2" style="border-color:rgba(176,96,255,.22);"></div>
+    <div class="pin-dot" id="apd3" style="border-color:rgba(176,96,255,.22);"></div>
+  </div>
+  <div id="apin-err" style="font-size:7px;color:var(--r);min-height:16px;margin-bottom:10px;letter-spacing:.08em;"></div>
+  <div class="numpad">
+    <div class="num num-adm" onclick="adminPinPress(1)">1</div><div class="num num-adm" onclick="adminPinPress(2)">2</div><div class="num num-adm" onclick="adminPinPress(3)">3</div>
+    <div class="num num-adm" onclick="adminPinPress(4)">4</div><div class="num num-adm" onclick="adminPinPress(5)">5</div><div class="num num-adm" onclick="adminPinPress(6)">6</div>
+    <div class="num num-adm" onclick="adminPinPress(7)">7</div><div class="num num-adm" onclick="adminPinPress(8)">8</div><div class="num num-adm" onclick="adminPinPress(9)">9</div>
+    <div class="num blank"></div><div class="num num-adm" onclick="adminPinPress(0)">0</div><div class="num num-adm" onclick="adminPinPress('del')">⌫</div>
+  </div>
+  <button class="btn-out" style="width:200px;margin-top:8px;border-color:rgba(176,96,255,.4);color:var(--adm);" onclick="go('s-staff-home')">CANCEL</button>
+</div>
 
-  <!-- DASHBOARD TAB -->
-  <div class="sa" id="atab-dash">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <div style="font-size:9px;color:var(--adm);text-shadow:0 0 8px var(--adm);">📊 DASHBOARD</div>
-      <span style="background:#000;border:2px solid var(--adm);color:var(--adm);
-                   font-size:6px;padding:4px 8px;box-shadow:0 0 6px rgba(176,96,255,.3);">ADMIN</span>
+<!-- ══════════════════════════════════════
+     ADMIN — DASHBOARD TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-dash" style="padding-top:4px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
+    <div style="font-size:8px;color:var(--adm);text-shadow:0 0 6px var(--adm);">THE NOOK</div>
+    <span class="tag tag-a">ADMIN</span>
+  </div>
+  <div class="scroll">
+    <div style="font-size:7px;color:var(--adm);margin-bottom:10px;letter-spacing:.08em;">📊 DASHBOARD</div>
+    <div class="g2" style="margin-bottom:8px;">
+      <div class="card-adm" style="margin-bottom:0;text-align:center;padding:9px;">
+        <div style="font-size:5px;color:var(--adm);margin-bottom:4px;">MEMBERS</div>
+        <div style="font-size:20px;color:var(--adm);text-shadow:0 0 10px var(--adm);" id="db-members">0</div>
+      </div>
+      <div class="card-b" style="margin-bottom:0;text-align:center;padding:9px;">
+        <div style="font-size:5px;color:var(--b);margin-bottom:4px;">TOTAL VISITS</div>
+        <div style="font-size:20px;color:var(--b);text-shadow:0 0 10px var(--b);" id="db-visits">0</div>
+      </div>
     </div>
     <div class="g2" style="margin-bottom:8px;">
-      <div class="scard" style="border-color:var(--p);color:var(--p);">
-        <div style="font-size:5px;letter-spacing:.1em;">MEMBERS</div>
-        <div class="sval" id="db-members">0</div>
+      <div style="background:rgba(255,238,0,.07);border:2px solid var(--y);box-shadow:3px 3px 0 #222200;
+           text-align:center;padding:9px;position:relative;">
+        <div style="font-size:5px;color:var(--y);margin-bottom:4px;">COFFEES REDEEMED</div>
+        <div style="font-size:20px;color:var(--y);text-shadow:0 0 10px var(--y);" id="db-redeemed">0</div>
       </div>
-      <div class="scard" style="border-color:var(--g);color:var(--g);">
-        <div style="font-size:5px;letter-spacing:.1em;">TOTAL VISITS</div>
-        <div class="sval" id="db-visits">0</div>
-      </div>
-    </div>
-    <div class="g2" style="margin-bottom:8px;">
-      <div class="scard" style="border-color:var(--y);color:var(--y);">
-        <div style="font-size:5px;letter-spacing:.1em;">COFFEES REDEEMED</div>
-        <div class="sval" id="db-redeemed">0</div>
-      </div>
-      <div class="scard" style="border-color:var(--b);color:var(--b);">
-        <div style="font-size:5px;letter-spacing:.1em;">ACTIVE REWARDS</div>
-        <div class="sval" id="db-active">0</div>
+      <div class="card" style="margin-bottom:0;text-align:center;padding:9px;">
+        <div style="font-size:5px;color:var(--g);margin-bottom:4px;">ACTIVE REWARDS</div>
+        <div style="font-size:20px;color:var(--g);text-shadow:0 0 10px var(--g);" id="db-active">0</div>
       </div>
     </div>
-    <div class="card-a" style="margin-bottom:8px;">
+    <div class="card-adm" style="margin-bottom:8px;">
       <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
         <span style="font-size:6px;color:var(--adm);">AVG STAMP PROGRESS</span>
         <span style="font-size:6px;color:var(--adm);" id="db-avg-lbl">0/10</span>
       </div>
-      <div class="prog-wrap" style="border-color:rgba(176,96,255,.3);">
-        <div id="db-avg-bar" style="height:100%;background:var(--adm);
-             box-shadow:0 0 8px rgba(176,96,255,.5);transition:width .3s steps(8);width:0%;"></div>
+      <div class="prog-wrap" style="border-color:rgba(176,96,255,.25);">
+        <div id="db-avg-bar" style="height:100%;background:var(--adm);box-shadow:0 0 7px rgba(176,96,255,.5);width:0%;transition:width .3s steps(8);"></div>
         <div class="prog-text" id="db-avg-text"></div>
       </div>
-      <div style="font-size:6px;color:rgba(176,96,255,.3);margin-top:6px;line-height:2.2;">
-        AVERAGE CURRENT STAMPS ACROSS ALL MEMBERS
-      </div>
+      <div style="font-size:5px;color:rgba(176,96,255,.3);margin-top:5px;line-height:2;">AVERAGE CURRENT STAMPS ACROSS ALL MEMBERS</div>
     </div>
-    <div class="card-a" style="margin-bottom:8px;">
+    <div class="card-adm" style="margin-bottom:8px;">
       <div style="font-size:6px;color:var(--adm);margin-bottom:8px;">🏆 TOP CUSTOMERS</div>
       <div id="db-top"></div>
     </div>
-    <div class="card-a">
+    <div class="card-adm">
       <div style="font-size:6px;color:var(--adm);margin-bottom:8px;">🕐 RECENT ACTIVITY</div>
       <div id="db-activity"></div>
     </div>
   </div>
-
-  <!-- CUSTOMERS TAB -->
-  <div class="sa" id="atab-custs" style="display:none;">
-    <div style="font-size:8px;color:var(--adm);text-shadow:0 0 8px var(--adm);margin-bottom:10px;">👥 CUSTOMERS</div>
-    <input id="admin-search" placeholder="SEARCH NAME / PHONE..." style="margin-bottom:10px;" oninput="renderAdminList()"/>
-    <div id="admin-list" style="border:2px solid rgba(176,96,255,.3);box-shadow:3px 3px 0 #1a0033;overflow:hidden;"></div>
-  </div>
-
-  <!-- REDEMPTIONS TAB -->
-  <div class="sa" id="atab-rdm" style="display:none;">
-    <div style="font-size:8px;color:var(--adm);text-shadow:0 0 8px var(--adm);margin-bottom:14px;">🎁 REDEMPTION HISTORY</div>
-    <div id="rdm-list" style="border:2px solid rgba(176,96,255,.25);overflow:hidden;"></div>
-  </div>
-
-  <!-- SCANNER TAB (admin) -->
-  <div class="sa" id="atab-scan" style="display:none;">
-    <div class="scan-box">
-      <div id="qr-reader-a"></div>
-      <div id="scan-ph-a">
-        <div class="sc-corners">
-          <div class="corner tl"></div><div class="corner tr"></div>
-          <div class="corner bl"></div><div class="corner br"></div>
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;">
-            <div style="font-size:26px;">📷</div>
-            <div style="font-size:6px;color:var(--b);letter-spacing:.08em;" class="blink">READY</div>
-          </div>
-          <div class="scan-line"></div>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-b" id="btn-cam-a" onclick="toggleCamera('a')">▶ START CAMERA SCAN</button>
-    <div class="card-b" style="margin-top:4px;">
-      <div style="font-size:6px;color:var(--b);letter-spacing:.1em;margin-bottom:8px;">PHONE LOOKUP</div>
-      <div style="display:flex;gap:6px;">
-        <input id="scan-phone-a" placeholder="5081234567" type="tel" style="font-size:7px;"
-               onkeydown="if(event.key==='Enter')doPhoneScan('a')"/>
-        <button class="btn btn-b" style="width:auto;padding:12px 12px;margin-bottom:0;flex-shrink:0;font-size:8px;"
-                onclick="doPhoneScan('a')">GO</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="bnav am">
-    <button class="nb on" id="anb-dash"  onclick="aTab('dash')"><span class="ni">📊</span>DASH</button>
-    <button class="nb"    id="anb-custs" onclick="aTab('custs')"><span class="ni">👥</span>CUSTOMERS</button>
-    <button class="nb"    id="anb-rdm"   onclick="aTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
-    <button class="nb"    id="anb-scan"  onclick="aTab('scan')"><span class="ni">📷</span>SCANNER</button>
-    <button class="nb"    onclick="go('s-welcome')"><span class="ni">🔒</span>LOGOUT</button>
+  <div class="anav-bar">
+    <button class="anav-btn active" onclick="adminGoTab('dash')"><span class="ni">📊</span>DASH</button>
+    <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
+    <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
+    <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
+    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
-<!-- ══════ ADMIN CUSTOMER DETAIL ══════ -->
-<div class="screen" id="s-admin-cust" style="padding-top:8px;">
+<!-- ══════════════════════════════════════
+     ADMIN — REDEMPTIONS TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-rdm" style="padding-top:4px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
-    <button class="back" style="margin-bottom:0;" onclick="go('s-admin-home')">◀ ADMIN</button>
-    <span style="background:#000;border:2px solid var(--adm);color:var(--adm);
-                 font-size:6px;padding:4px 8px;box-shadow:0 0 6px rgba(176,96,255,.3);">ADMIN VIEW</span>
+    <div style="font-size:8px;color:var(--adm);">🎁 REDEMPTION LOG</div>
+    <span class="tag tag-a">ADMIN</span>
   </div>
-  <div class="sa">
-    <div id="ac-offers" style="margin-bottom:6px;"></div>
-    <div class="card-a" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-      <div style="width:42px;height:42px;flex-shrink:0;background:#000;border:2px solid var(--adm);
-           box-shadow:0 0 8px rgba(176,96,255,.3);display:flex;align-items:center;
-           justify-content:center;color:var(--adm);font-size:17px;" id="ac-av"></div>
-      <div>
-        <div id="ac-name"  style="color:var(--y);font-size:10px;text-shadow:0 0 6px var(--y);margin-bottom:3px;"></div>
-        <div id="ac-phone" style="font-size:6px;color:rgba(0,229,255,.4);margin-bottom:2px;"></div>
-        <div id="ac-meta"  style="font-size:6px;color:rgba(176,96,255,.4);"></div>
+  <div class="scroll">
+    <div id="rdm-list" style="border:2px solid rgba(176,96,255,.2);overflow:hidden;"></div>
+  </div>
+  <div class="anav-bar">
+    <button class="anav-btn" onclick="adminGoTab('dash')"><span class="ni">📊</span>DASH</button>
+    <button class="anav-btn active" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
+    <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
+    <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
+    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN — PLAYERS TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-players" style="padding-top:4px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
+    <div style="font-size:8px;color:var(--adm);">👥 ALL PLAYERS</div>
+    <span class="tag tag-a">ADMIN</span>
+  </div>
+  <div class="scroll">
+    <input id="admin-search" placeholder="SEARCH BY NAME OR PHONE..."
+           style="font-size:7px;border-color:var(--adm);color:var(--adm);margin-bottom:10px;"
+           oninput="renderAdminPlayerList()"/>
+    <div id="admin-player-list" style="border:2px solid rgba(176,96,255,.2);overflow:hidden;"></div>
+  </div>
+  <div class="anav-bar">
+    <button class="anav-btn" onclick="adminGoTab('dash')"><span class="ni">📊</span>DASH</button>
+    <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
+    <button class="anav-btn active" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
+    <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
+    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN — SCANNER TAB
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-scan" style="padding-top:4px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
+    <div style="font-size:8px;color:var(--adm);">📷 SCANNER</div>
+    <span class="tag tag-a">ADMIN</span>
+  </div>
+  <div class="scroll">
+    <div class="scan-box scan-box-adm">
+      <div id="qr-reader-adm"></div>
+      <div id="scan-ph-adm">
+        <div class="sc-corners" style="--b:var(--adm);">
+          <div class="corner tl" style="border-color:var(--adm);"></div>
+          <div class="corner tr" style="border-color:var(--adm);"></div>
+          <div class="corner bl" style="border-color:var(--adm);"></div>
+          <div class="corner br" style="border-color:var(--adm);"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;">
+            <div style="font-size:26px;">📷</div>
+            <div style="font-size:6px;color:var(--adm);" class="blink">READY</div>
+          </div>
+          <div class="scan-line" style="background:linear-gradient(90deg,transparent,var(--adm),transparent);box-shadow:0 0 7px var(--adm);"></div>
+        </div>
       </div>
     </div>
-    <!-- Stamps with admin controls -->
-    <div class="card" style="margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="color:var(--g);font-size:7px;">☕ STAMPS</span>
-        <span id="ac-slabel" style="color:var(--y);font-size:8px;"></span>
-        <span id="ac-ready" style="display:none;font-size:6px;color:var(--y);" class="blink">★ READY ★</span>
-      </div>
-      <div class="hp-bar" id="ac-stamps"></div>
-      <div class="prog-wrap"><div class="prog-fill" id="ac-prog"></div>
-        <div class="prog-text" id="ac-prog-t"></div></div>
-      <div style="display:flex;gap:8px;margin-top:12px;">
-        <button class="btn-sm btn-sm-g" onclick="adminAddStamp()" style="flex:1;">+ ADD STAMP</button>
-        <button class="btn-sm btn-sm-r" id="ac-rm-btn" onclick="adminRemoveStamp()" style="flex:1;">- REMOVE STAMP</button>
+    <button class="btn btn-adm" id="btn-cam-adm" onclick="toggleAdminCamera()">▶ START CAMERA</button>
+    <div class="card-adm" style="margin-top:6px;">
+      <div class="lbl-adm" style="margin-bottom:8px;">LOOKUP BY PHONE</div>
+      <div style="display:flex;gap:6px;">
+        <input id="scan-phone-adm" placeholder="5081234567" type="tel"
+               style="font-size:7px;border-color:var(--adm);color:var(--adm);"
+               onkeydown="if(event.key==='Enter')doAdminPhoneScan()"/>
+        <button class="btn btn-adm" style="width:auto;padding:12px;margin-bottom:0;flex-shrink:0;"
+                onclick="doAdminPhoneScan()">GO</button>
       </div>
     </div>
-    <!-- Rewards -->
+  </div>
+  <div class="anav-bar">
+    <button class="anav-btn" onclick="adminGoTab('dash')"><span class="ni">📊</span>DASH</button>
+    <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
+    <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
+    <button class="anav-btn active" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
+    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN DETAIL  (full card + controls)
+══════════════════════════════════════ -->
+<div class="screen" id="s-admin-detail" style="padding-top:4px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;">
+    <button class="back" style="margin-bottom:0;" onclick="go('s-admin-players')">◀ PLAYERS</button>
+    <span class="tag tag-a">ADMIN VIEW</span>
+  </div>
+  <div class="scroll">
+    <div class="card-adm" style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+      <div class="c-av c-av-adm" style="width:44px;height:44px;font-size:18px;" id="ad-avatar"></div>
+      <div style="flex:1;">
+        <div id="ad-name" style="font-size:10px;color:var(--y);text-shadow:0 0 6px rgba(255,238,0,.5);margin-bottom:3px;"></div>
+        <div id="ad-meta" style="font-size:6px;color:rgba(176,96,255,.5);letter-spacing:.04em;line-height:2.2;white-space:pre-line;"></div>
+      </div>
+    </div>
+    <div id="ad-offers" style="margin-bottom:4px;"></div>
+    <!-- Stamp card with add + remove -->
     <div class="card" style="margin-bottom:8px;">
-      <div style="font-size:7px;color:rgba(0,255,136,.4);margin-bottom:8px;">🏆 FREE COFFEES</div>
-      <div id="ac-rewards-list"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+        <span style="font-size:7px;color:var(--g);">☕ STAMPS</span>
+        <span id="ad-stamp-lbl" style="font-size:7px;color:var(--y);"></span>
+      </div>
+      <div class="hp-bar" id="ad-stamps"></div>
+      <div class="prog-wrap"><div class="prog-fill" id="ad-prog"></div><div class="prog-text" id="ad-prog-t"></div></div>
       <div style="display:flex;gap:8px;margin-top:10px;">
-        <button class="btn-sm btn-sm-a" id="ac-redeem-btn" onclick="adminRedeemReward()" style="flex:1;">★ REDEEM COFFEE</button>
-        <button class="btn-sm btn-sm-a" onclick="adminGrantReward()" style="flex:1;">+ GRANT REWARD</button>
+        <button class="btn-sm btn-sm-g" onclick="adAddStamp()" style="flex:1;">+ ADD STAMP</button>
+        <button class="btn-sm btn-sm-r" id="ad-rm-btn" onclick="adRemoveStamp()" style="flex:1;">– REMOVE</button>
       </div>
     </div>
-    <!-- Birthday -->
+    <!-- Rewards + grant/redeem -->
     <div class="card" style="margin-bottom:8px;">
-      <div style="font-size:7px;color:rgba(255,0,255,.5);margin-bottom:8px;">🎂 BIRTHDAY REWARD</div>
-      <button class="btn btn-p" id="ac-bday-btn" onclick="adminGrantBirthday()" style="margin-bottom:0;">GRANT BIRTHDAY FREE COFFEE</button>
+      <div style="font-size:7px;color:rgba(0,255,136,.45);margin-bottom:8px;">🏆 PENDING REWARDS</div>
+      <div id="ad-rewards-list"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn-sm btn-sm-adm" onclick="adGrantReward()" style="flex:1;">+ GRANT REWARD</button>
+        <button class="btn-sm btn-sm-g" id="ad-redeem-btn" onclick="adRedeemCoffee()" style="flex:1;">★ REDEEM</button>
+      </div>
     </div>
-    <!-- History -->
+    <button class="btn btn-r" id="sd-btn-redeem-adm" onclick="adRedeemCoffee()">★ REDEEM FREE COFFEE ★</button>
+    <button class="btn btn-p" id="ad-btn-bday" style="display:none;" onclick="adGrantBirthday()">🎂 GRANT BIRTHDAY REWARD</button>
+    <!-- Visit history -->
     <div class="card-b">
-      <div style="font-size:6px;color:var(--b);margin-bottom:8px;">📜 FULL HISTORY</div>
-      <div id="ac-hist"></div>
+      <div class="lbl" style="margin-bottom:8px;">📜 VISIT HISTORY</div>
+      <div id="ad-hist-list"></div>
     </div>
   </div>
 </div>
@@ -754,777 +872,734 @@ input[readonly]{color:rgba(0,229,255,.5);border-color:rgba(0,229,255,.25);cursor
 // ═══════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════
-const STAFF_PIN   = "1234";
-const ADMIN_PIN   = "0000";
-const PHONE_RE    = /^[0-9]{10}$/;
-const REWARD_DAYS = 90;
+const STAFF_PIN  = "1234";
+const ADMIN_PIN  = "0000";
+const PHONE_RE   = /^[0-9]{10}$/;
+const REWARD_EXP = 90; // reward expiry in days
 
 // ═══════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════
+// visits: direct counter — +1 per purchase
+// rewards: [{id, earned, expires, redeemed, redeemedDate, note}]
+// note values: '10-stamp' | 'birthday' | 'admin-grant'  (admin/birthday grants never count as visits)
 let customers = [
   { id:"NOOK-0001", name:"MARGARITA", phone:"5081234567",
-    birthday:"1990-03-05", stamps:7, visits:18,
+    birthday:"1990-03-05", stamps:7, visits:24,
     rewards:[
-      { id:"r1", earned:"2026-01-10", expires:"2026-04-10",
-        redeemed:false, redeemedDate:null, source:"stamps" }
+      {id:"r1",earned:"2026-01-10",expires:"2026-04-10",redeemed:false,redeemedDate:null,note:"10-stamp"},
     ],
-    birthdayRewardYear:0,
+    birthdayYear:0, since:"2025-10-01",
     history:[
-      {date:"2026-02-20",type:"stamp"},{date:"2026-02-22",type:"stamp"},
-      {date:"2026-02-25",type:"stamp"},{date:"2026-02-27",type:"stamp"},
-      {date:"2026-03-01",type:"reward",note:"10-stamp reward earned"},
-      {date:"2026-03-03",type:"stamp"},{date:"2026-03-04",type:"stamp"},
-      {date:"2026-03-05",type:"stamp"},{date:"2026-03-06",type:"stamp"},
-      {date:"2026-03-07",type:"stamp"}
+      {date:"2026-02-18",type:"stamp"},{date:"2026-02-22",type:"stamp"},
+      {date:"2026-02-28",type:"stamp"},{date:"2026-03-01",type:"reward",note:"redeemed free coffee"},
+      {date:"2026-03-04",type:"stamp"},{date:"2026-03-07",type:"stamp"},
     ]
   },
   { id:"NOOK-0042", name:"JAMES", phone:"5089876543",
-    birthday:"1985-07-22", stamps:3, visits:3,
-    rewards:[], birthdayRewardYear:0,
+    birthday:"1985-07-22", stamps:3, visits:8,
+    rewards:[], birthdayYear:0, since:"2025-11-15",
     history:[
-      {date:"2026-03-01",type:"stamp"},
-      {date:"2026-03-03",type:"stamp"},
-      {date:"2026-03-05",type:"stamp"}
+      {date:"2026-03-01",type:"stamp"},{date:"2026-03-03",type:"stamp"},{date:"2026-03-05",type:"stamp"}
     ]
   },
 ];
 
-function save(){ try{localStorage.setItem("theNookV4",JSON.stringify(customers));}catch(e){} }
-function load(){
-  try{
-    const d=localStorage.getItem("theNookV4");
-    if(d){const p=JSON.parse(d);if(Array.isArray(p)&&p.length)customers=p;}
-  }catch(e){}
+function saveData(){try{localStorage.setItem("theNookV4",JSON.stringify(customers));}catch(e){}}
+function loadData(){
+  try{const d=localStorage.getItem("theNookV4");
+    if(d){const p=JSON.parse(d);if(Array.isArray(p)&&p.length)customers=p;}}catch(e){}
 }
-load();
+loadData();
 
 // ═══════════════════════════════════════════
-// UTILS
+// STATE
 // ═══════════════════════════════════════════
-function today(){
-  const d=new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function addDays(s,n){
-  const d=new Date(s+'T12:00:00'); d.setDate(d.getDate()+n);
-  return d.toISOString().slice(0,10);
-}
-function daysLeft(s){ return Math.ceil((new Date(s+'T12:00:00')-new Date())/(864e5)); }
-function genId(){ return "NOOK-"+String(Math.floor(Math.random()*9000)+1000); }
-function genRId(){ return "r"+Date.now().toString(36); }
-function isTuesday(){ return new Date().getDay()===2; }
-function isBirthdayMonth(c){
-  if(!c?.birthday) return false;
-  return new Date(c.birthday+'T12:00:00').getMonth()===new Date().getMonth();
-}
-function birthdayUsed(c){ return c.birthdayRewardYear===new Date().getFullYear(); }
-function pendingRewards(c){
-  const t=today(); return (c.rewards||[]).filter(r=>!r.redeemed&&r.expires>=t);
-}
-const MONTH_NAMES=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-function formatBirthday(s){
-  if(!s) return '';
-  const p=s.split('-');
-  return `${MONTH_NAMES[parseInt(p[1])-1]} ${parseInt(p[2])}, ${p[0]}`;
-}
+let staffPin="", adminPin="";
+let lastStampTime=0, coolTimer=null;
+let currentCustomer=null;   // signed-in customer
+let selectedCustomer=null;  // staff is viewing
+let adminCustomer=null;     // admin is viewing
+let cameraActive=false, html5QrCode=null;
+let admCamActive=false, html5QrCodeAdm=null;
 
 // ═══════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════
-let currentCustomer=null, scannedCustomer=null, adminCustomer=null;
-let stampBackDest='s-staff-home'; // where stamp screen "back" goes
-
 function go(id){
-  // stop cameras when leaving their respective scan tabs
-  if(id!=='s-staff-home') stopCamera('s');
-  if(id!=='s-admin-home') stopCamera('a');
+  if(id!=='s-staff-scanner') stopCamera();
+  if(id!=='s-admin-scan')    stopAdminCamera();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const el=document.getElementById(id); if(el) el.classList.add('active');
-  if(id==='s-cust-home')   renderCustHome();
-  if(id==='s-stamp')       renderStamp();
-  if(id==='s-staff-home')  renderStaffList();
-  if(id==='s-admin-home')  renderAdminDash();
-  if(id==='s-admin-cust')  renderAdminCust();
-  if(id==='s-leaderboard') renderLeaderboard();
+  document.getElementById(id).classList.add('active');
+  const renders={
+    's-c-rewards':   renderCustomerRewards,
+    's-c-history':   renderCustomerHistory,
+    's-c-settings':  renderCustomerSettings,
+    's-leaderboard': renderLeaderboard,
+    's-staff-home':  renderStaffHome,
+    's-staff-detail':renderStaffDetail,
+    's-admin-dash':  renderAdminDash,
+    's-admin-rdm':   renderAdminRdm,
+    's-admin-players':renderAdminPlayerList,
+    's-admin-detail':renderAdminDetail,
+  };
+  if(renders[id]) renders[id]();
+}
+function adminGoTab(tab){go('s-admin-'+tab);}
+function staffGoScan(){
+  document.getElementById('qr-reader').style.display='none';
+  document.getElementById('scan-placeholder').style.display='block';
+  go('s-staff-scanner');
 }
 
-function stampGoBack(){ go(stampBackDest); }
-
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
 function showToast(msg,type='ok'){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(type==='err'?' err':type==='info'?' info':'');
+  t.textContent=msg; t.className='toast '+type;
   setTimeout(()=>t.classList.add('show'),10);
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
 // ═══════════════════════════════════════════
-// QR CODE
+// HELPERS
 // ═══════════════════════════════════════════
-function drawQR(text, elId){
-  const el=document.getElementById(elId);
-  if(!el) return;
-  el.innerHTML='';
-  try{
-    new QRCode(el,{
-      text:text, width:110, height:110,
-      colorDark:'#000000', colorLight:'#ffffff',
-      correctLevel:QRCode.CorrectLevel.M
-    });
-  }catch(e){
-    el.innerHTML=`<div style="font-size:6px;color:var(--r);padding:10px;">QR ERROR</div>`;
-  }
+function genId(){return "NOOK-"+String(Math.floor(Math.random()*9000)+1000);}
+function genRid(){return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function addDays(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function daysLeft(ds){return Math.ceil((new Date(ds+'T12:00:00')-new Date())/864e5);}
+function isBirthdayMonth(c){
+  if(!c?.birthday)return false;
+  return new Date(c.birthday+'T12:00:00').getMonth()===new Date().getMonth();
 }
-
-// ═══════════════════════════════════════════
-// OFFERS
-// ═══════════════════════════════════════════
-function renderOffers(elId, c){
+function bdayUsed(c){return c.birthdayYear===new Date().getFullYear();}
+function pendingRewards(c){const t=todayStr();return(c.rewards||[]).filter(r=>!r.redeemed&&r.expires>=t);}
+function addHist(idx,type,note=''){
+  if(!customers[idx].history)customers[idx].history=[];
+  customers[idx].history.push({date:todayStr(),type,...(note?{note}:{})});
+}
+function syncCustomer(id){
+  const c=customers.find(x=>x.id===id);
+  if(currentCustomer?.id===id)  currentCustomer=c;
+  if(selectedCustomer?.id===id) selectedCustomer=c;
+  if(adminCustomer?.id===id)    adminCustomer=c;
+}
+function renderHPBar(el,stamps,max=10){
+  el.innerHTML=Array.from({length:max},(_,i)=>`<div class="hp-pip ${i<stamps?'on':''}"></div>`).join('');
+}
+function renderOffers(cid,c){
   let h='';
-  if(isTuesday()) h+=`<div class="offer-banner"><span class="ico">⚡</span><div class="txt">DOUBLE STAMP TUESDAY!<br>EARN 2X STAMPS TODAY</div></div>`;
-  if(c&&isBirthdayMonth(c)&&!birthdayUsed(c))
-    h+=`<div class="offer-banner bday"><span class="ico">🎂</span><div class="txt" style="color:var(--p)">BIRTHDAY MONTH, ${c.name}!<br>FREE COFFEE WAITING</div></div>`;
-  document.getElementById(elId).innerHTML=h;
+  if(c&&isBirthdayMonth(c)&&!bdayUsed(c)) h+=`<div class="offer-banner bday"><span class="ob-icon">🎂</span><div class="ob-text">BIRTHDAY MONTH, ${c.name}!<br>FREE COFFEE WAITING</div></div>`;
+  document.getElementById(cid).innerHTML=h;
 }
-
-// ═══════════════════════════════════════════
-// HP BAR
-// ═══════════════════════════════════════════
-function renderHP(elId, stamps){
-  document.getElementById(elId).innerHTML=
-    Array.from({length:10},(_,i)=>`<div class="hp-pip ${i<stamps?'on':''}"></div>`).join('');
+const H_ICO={stamp:'☕',reward:'🏆',birthday:'🎂'};
+const H_LBL={stamp:'STAMP ADDED',reward:'FREE COFFEE',birthday:'BIRTHDAY REWARD'};
+function renderHistList(elId,c){
+  const h=(c.history||[]).slice().reverse();
+  if(!h.length){document.getElementById(elId).innerHTML='<div style="font-size:6px;color:rgba(0,255,136,.2);padding:8px;text-align:center;">NO ACTIVITY YET</div>';return;}
+  document.getElementById(elId).innerHTML=h.map(e=>`
+    <div class="hist-item">
+      <span class="hist-icon">${H_ICO[e.type]||'•'}</span>
+      <div class="hist-text">${H_LBL[e.type]||e.type}${e.note?`<div style="font-size:5px;color:rgba(0,229,255,.35);margin-top:1px;">${e.note}</div>`:''}</div>
+      <span class="hist-date">${e.date}</span>
+    </div>`).join('');
 }
 
 // ═══════════════════════════════════════════
 // REWARD CHIPS
 // ═══════════════════════════════════════════
-function renderRewardChips(elId, c, showRedeem=false){
-  const t=today(), pending=(c.rewards||[]).filter(r=>!r.redeemed);
-  if(!pending.length){
-    document.getElementById(elId).innerHTML=
-      `<div style="font-size:7px;color:rgba(0,255,136,.18);padding:6px 0;">NO PENDING REWARDS</div>`;
-    return;
-  }
-  document.getElementById(elId).innerHTML=pending.map(r=>{
-    const left=daysLeft(r.expires), expired=left<=0, expiring=left>0&&left<=14;
-    const cls=expired?'expired':expiring?'expiring':'';
-    const col=expired?'var(--r)':expiring?'var(--o)':'var(--g)';
-    return `<div class="rchip ${cls}">
+function renderRewardChips(elId,c,showBtn,fnName){
+  const all=(c.rewards||[]).filter(r=>!r.redeemed);
+  if(!all.length){document.getElementById(elId).innerHTML='<div style="font-size:6px;color:rgba(0,255,136,.2);padding:6px 0;">NO PENDING REWARDS</div>';return;}
+  document.getElementById(elId).innerHTML=all.map(r=>{
+    const left=daysLeft(r.expires),expired=left<=0,warn=left>0&&left<=14;
+    const cls=expired?'dead':warn?'warn':'';
+    const col=expired?'var(--r)':warn?'var(--o)':'var(--g)';
+    return `<div class="reward-chip ${cls}">
       <div>
         <div style="font-size:7px;color:${col};margin-bottom:2px;">☕ FREE COFFEE</div>
-        <div style="font-size:6px;color:rgba(0,229,255,.35);">
-          ${expired?'EXPIRED':'EXPIRES'} ${r.expires}${!expired?' ('+left+'d)':''}
+        <div style="font-size:5px;color:rgba(0,229,255,.35);">
+          ${expired?'EXPIRED':'EXPIRES'} ${r.expires}${!expired?' ('+left+'d LEFT)':''}
+          ${r.note?' · '+r.note:''}
         </div>
       </div>
-      ${showRedeem&&!expired?`<button class="btn-sm btn-sm-g" onclick="redeemById('${c.id}','${r.id}')">REDEEM</button>`:''}
+      ${showBtn&&!expired?`<button class="btn-sm btn-sm-g" onclick="${fnName}('${r.id}')">REDEEM</button>`:''}
     </div>`;
   }).join('');
 }
 
 // ═══════════════════════════════════════════
-// SIGN IN / OUT
+// QR CODE — generate a real scannable code
 // ═══════════════════════════════════════════
-function doSignin(){
-  const phone=document.getElementById('si-phone').value.trim();
-  if(!phone){showToast('ENTER YOUR PHONE NUMBER','err');return;}
-  const found=customers.find(c=>c.phone===phone);
-  if(!found){showToast('ACCOUNT NOT FOUND','err');return;}
-  currentCustomer=found;
-  document.getElementById('si-phone').value='';
-  showToast('WELCOME BACK '+found.name+' ★');
-  go('s-cust-home');
+let _qrPrev=null;
+function drawQR(id,elId){
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  if(typeof QRCode==='undefined')return;
+  new QRCode(el,{text:id,width:110,height:110,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 }
-function doSignout(){ currentCustomer=null; go('s-welcome'); }
 
 // ═══════════════════════════════════════════
-// SIGN UP
+// SIGN IN / OUT
 // ═══════════════════════════════════════════
-function doSignup(){
-  const name=document.getElementById('su-name').value.trim().toUpperCase();
-  const phone=document.getElementById('su-phone').value.trim();
-  const bm=document.getElementById('su-bm').value;
-  const bd=document.getElementById('su-bd').value;
-  const by=document.getElementById('su-by').value;
-  const bday=(bm&&bd&&by)?`${by}-${bm.padStart(2,'0')}-${bd}`:'';
+function doSignIn(){
+  const phone=document.getElementById('w-phone').value.trim();
+  if(!PHONE_RE.test(phone)){showToast('ENTER A VALID 10-DIGIT PHONE','err');return;}
+  const c=customers.find(x=>x.phone===phone);
+  if(!c){showToast('PHONE NOT FOUND — CREATE ACCOUNT?','err');return;}
+  currentCustomer=c; document.getElementById('w-phone').value='';
+  showToast('WELCOME BACK '+c.name+'!'); go('s-c-rewards');
+}
+function doSignOut(){currentCustomer=null;go('s-welcome');showToast('SEE YOU SOON! ☕','info');}
+
+// ═══════════════════════════════════════════
+// CREATE ACCOUNT
+// ═══════════════════════════════════════════
+function doCreate(){
+  const name=document.getElementById('c-name').value.trim().toUpperCase();
+  const phone=document.getElementById('c-phone').value.trim();
   if(!name||!phone){showToast('FILL ALL FIELDS','err');return;}
   if(!PHONE_RE.test(phone)){showToast('INVALID PHONE NUMBER','err');return;}
   if(customers.some(c=>c.phone===phone)){showToast('PHONE ALREADY REGISTERED','err');return;}
-  const nc={id:genId(),name,phone,birthday:bday,stamps:0,visits:0,
-            rewards:[],birthdayRewardYear:0,history:[]};
-  customers.push(nc); currentCustomer=nc; save();
-  ['su-name','su-phone'].forEach(id=>document.getElementById(id).value='');
-  ['su-bm','su-bd','su-by'].forEach(id=>document.getElementById(id).value='');
-  showToast('★ WELCOME '+nc.name+' ★');
-  go('s-cust-home');
+  const bday=getBday('c-bm','c-bd','c-by');
+  const nc={id:genId(),name,phone,birthday:bday,stamps:0,visits:0,rewards:[],birthdayYear:0,since:todayStr(),history:[]};
+  customers.push(nc); currentCustomer=nc; saveData();
+  document.getElementById('c-name').value=''; document.getElementById('c-phone').value='';
+  ['c-bm','c-bd','c-by'].forEach(id=>document.getElementById(id).value='');
+  showToast('★ WELCOME '+nc.name+'! ★'); go('s-c-rewards');
 }
 
 // ═══════════════════════════════════════════
-// CUSTOMER HOME
+// CUSTOMER SCREENS
 // ═══════════════════════════════════════════
-function cTab(t){
-  ['rewards','hist','settings'].forEach(k=>{
-    document.getElementById('ctab-'+k).style.display=k===t?'block':'none';
-    document.getElementById('cnb-'+k).classList.toggle('on',k===t);
-  });
-  if(t==='rewards')  renderCustHome();
-  if(t==='hist')     renderCustHist();
-  if(t==='settings') renderSettings();
+function renderCustomerRewards(){
+  const c=customers.find(x=>x.id===currentCustomer?.id)||currentCustomer;
+  if(!c)return; currentCustomer=c;
+  document.getElementById('c-header-name').textContent=c.name;
+  renderOffers('c-offers',c);
+  drawQR(c.id,'c-qr');
+  document.getElementById('c-qr-id').textContent=c.id;
+  document.getElementById('c-stamp-lbl').textContent=c.stamps+'/10';
+  renderHPBar(document.getElementById('c-stamps'),c.stamps);
+  document.getElementById('c-prog').style.width=(c.stamps/10*100)+'%';
+  document.getElementById('c-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
+  renderRewardChips('c-rewards-list',c,false,'');
+  document.getElementById('c-total-r').textContent=(c.rewards||[]).filter(r=>r.redeemed).length;
+  document.getElementById('c-total-v').textContent=c.visits||0;
 }
-function freshCust(c){ return customers.find(x=>x.id===c?.id)||c; }
-
-function renderCustHome(){
-  currentCustomer=freshCust(currentCustomer);
-  const c=currentCustomer; if(!c) return;
-  document.getElementById('ch-name').textContent='HI, '+c.name;
-  document.getElementById('ch-id').textContent=c.id;
-  renderOffers('ch-offers',c);
-  // QR — draw after short delay to ensure DOM is ready
-  setTimeout(()=>drawQR(c.id,'ch-qr'),50);
-  document.getElementById('ch-sc').textContent=c.stamps+'/10';
-  renderHP('ch-stamps',c.stamps);
-  document.getElementById('ch-prog').style.width=(c.stamps/10*100)+'%';
-  document.getElementById('ch-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
-  renderRewardChips('ch-rewards-list',c,false);
-  document.getElementById('ch-total-r').textContent=(c.rewards||[]).filter(r=>r.redeemed).length;
-  document.getElementById('ch-visits').textContent=c.visits||0;
+function renderCustomerHistory(){
+  const c=customers.find(x=>x.id===currentCustomer?.id)||currentCustomer;
+  if(!c)return; currentCustomer=c;
+  document.getElementById('c-hist-name').textContent=c.name;
+  renderHistList('c-history-list',c);
 }
-
-function renderCustHist(){
-  currentCustomer=freshCust(currentCustomer);
-  const c=currentCustomer; if(!c) return;
-  const icons={stamp:'☕',reward:'🏆',birthday:'🎂'};
-  const labels={stamp:'STAMP ADDED',reward:'FREE COFFEE',birthday:'BIRTHDAY REWARD'};
-  const h=(c.history||[]).slice().reverse().slice(0,20);
-  document.getElementById('ch-hist-list').innerHTML=h.length
-    ?h.map(e=>`<div class="h-row">
-        <span class="h-ico">${icons[e.type]||'•'}</span>
-        <div class="h-txt">${labels[e.type]||e.type}
-          ${e.note?`<br><span style="color:rgba(0,229,255,.35);font-size:6px;">${e.note}</span>`:''}</div>
-        <span class="h-date">${e.date}</span>
-      </div>`).join('')
-    :'<div style="font-size:7px;color:rgba(0,255,136,.18);padding:10px 0;text-align:center;">NO ACTIVITY YET</div>';
-}
-
-// ═══════════════════════════════════════════
-// SETTINGS  (birthday locked after creation)
-// ═══════════════════════════════════════════
-function renderSettings(){
-  currentCustomer=freshCust(currentCustomer);
-  const c=currentCustomer; if(!c) return;
-  document.getElementById('set-id').textContent=c.id;
-  document.getElementById('set-phone').textContent=c.phone;
-  document.getElementById('set-name-inp').value=c.name;
+function renderCustomerSettings(){
+  const c=currentCustomer; if(!c)return;
+  document.getElementById('c-set-name').textContent=c.name;
+  document.getElementById('s-name').value=c.name;
+  document.getElementById('s-id').textContent=c.id;
+  document.getElementById('s-phone').textContent=c.phone;
+  document.getElementById('s-since').textContent=c.since||'—';
+  // Birthday: show locked display if set; show dropdowns if not set
   if(c.birthday){
-    // Birthday is set → show read-only
-    document.getElementById('set-bday-display').style.display='block';
-    document.getElementById('set-bday-edit').style.display='none';
-    document.getElementById('set-bday-ro').value=formatBirthday(c.birthday);
+    const [y,m,d]=c.birthday.split('-');
+    const mo=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    document.getElementById('s-bday-val').textContent=mo[parseInt(m,10)-1]+' '+parseInt(d,10)+', '+y;
+    document.getElementById('s-bday-locked').style.display='block';
+    document.getElementById('s-bday-dropdowns').style.display='none';
   } else {
-    // No birthday yet → allow setting it once
-    document.getElementById('set-bday-display').style.display='none';
-    document.getElementById('set-bday-edit').style.display='block';
+    document.getElementById('s-bday-locked').style.display='none';
+    document.getElementById('s-bday-dropdowns').style.display='block';
   }
 }
-function saveSettings(){
-  const name=document.getElementById('set-name-inp').value.trim().toUpperCase();
+function doSaveSettings(){
+  const c=currentCustomer; if(!c)return;
+  const name=document.getElementById('s-name').value.trim().toUpperCase();
   if(!name){showToast('NAME CANNOT BE EMPTY','err');return;}
-  const idx=customers.findIndex(x=>x.id===currentCustomer.id);
+  const idx=customers.findIndex(x=>x.id===c.id);
   customers[idx].name=name;
-  // Only save birthday if it wasn't set before (one-time opportunity)
+  // Birthday: only save if not already set
   if(!customers[idx].birthday){
-    const bm=document.getElementById('set-bm')?.value;
-    const bd=document.getElementById('set-bd')?.value;
-    const by=document.getElementById('set-by')?.value;
-    if(bm&&bd&&by) customers[idx].birthday=`${by}-${bm.padStart(2,'0')}-${bd}`;
+    const bday=getBday('s-bm','s-bd','s-by');
+    if(bday) customers[idx].birthday=bday;
   }
-  currentCustomer=customers[idx]; save();
-  showToast('★ SETTINGS SAVED ★');
-  renderSettings(); // re-render to lock birthday if just set
+  currentCustomer=customers[idx]; saveData();
+  document.getElementById('c-set-name').textContent=name;
+  document.getElementById('c-header-name').textContent=name;
+  showToast('✓ SETTINGS SAVED');
+  renderCustomerSettings(); // re-render to lock birthday if just set
 }
 
 // ═══════════════════════════════════════════
 // LEADERBOARD
 // ═══════════════════════════════════════════
 function renderLeaderboard(){
-  const sorted=[...customers].sort((a,b)=>
-    (b.rewards||[]).filter(r=>r.redeemed).length-(a.rewards||[]).filter(r=>r.redeemed).length);
+  const sorted=[...customers].sort((a,b)=>(b.rewards||[]).filter(r=>r.redeemed).length-(a.rewards||[]).filter(r=>r.redeemed).length);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('lb-list').innerHTML=sorted.length===0
-    ?'<div style="font-size:7px;color:rgba(0,255,136,.18);padding:12px;text-align:center;">NO PLAYERS YET</div>'
+    ?'<div style="font-size:6px;color:rgba(0,255,136,.2);padding:14px;text-align:center;">NO PLAYERS YET</div>'
     :sorted.map((c,i)=>{
       const rd=(c.rewards||[]).filter(r=>r.redeemed).length;
-      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;
-                border-bottom:1px solid rgba(0,255,136,.08);">
-        <div style="font-size:13px;width:22px;text-align:center;flex-shrink:0;
-             color:${i===0?'var(--y)':i===1?'rgba(200,200,200,.9)':'rgba(200,140,80,.9)'}">
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(0,255,136,.08);">
+        <div style="font-size:13px;width:22px;text-align:center;flex-shrink:0;color:${i===0?'var(--y)':i===1?'rgba(200,200,200,.9)':'rgba(200,140,80,.9)'}">
           ${i<3?medals[i]:(i+1)}</div>
         <div style="flex:1;">
           <div style="font-size:8px;color:var(--g);">${c.name}</div>
           <div style="font-size:5px;color:rgba(0,229,255,.3);margin-top:2px;">${c.id}</div>
         </div>
         <div style="text-align:right;">
-          <div style="font-size:8px;color:var(--y);">${rd} ☕ redeemed</div>
-          <div style="font-size:5px;color:rgba(0,255,136,.3);margin-top:2px;">${c.stamps}/10 now</div>
+          <div style="font-size:7px;color:var(--y);">${rd} ☕</div>
+          <div style="font-size:5px;color:rgba(0,255,136,.3);margin-top:2px;">${c.stamps}/10 STAMPS</div>
         </div>
       </div>`;
     }).join('');
 }
 
 // ═══════════════════════════════════════════
-// PIN PADS
+// STAFF PIN
 // ═══════════════════════════════════════════
-let pins={s:'',a:''};
-function pinPress(mode,k){
-  if(k==='del'){pins[mode]=pins[mode].slice(0,-1);updatePinUI(mode);return;}
-  if(pins[mode].length>=4) return;
-  pins[mode]+=String(k); updatePinUI(mode);
-  if(pins[mode].length===4) setTimeout(()=>checkPin(mode),120);
-}
-function updatePinUI(mode){
-  const pfx=mode==='s'?'sp':'ap';
-  const col=mode==='s'?'var(--p)':'var(--adm)';
-  const v=pins[mode];
+function updateStaffPinUI(){
   for(let i=0;i<4;i++){
-    const d=document.getElementById(pfx+i);
-    d.innerHTML=i<v.length?`<div class="pin-pip" style="background:${col};box-shadow:0 0 6px ${col};width:12px;height:12px;"></div>`:'';
-    d.classList.toggle('on',i<v.length); d.classList.remove('err');
+    const d=document.getElementById('spd'+i);
+    d.innerHTML=i<staffPin.length?'<div class="pin-pip"></div>':'';
+    d.classList.toggle('on',i<staffPin.length); d.classList.remove('err');
   }
 }
-function checkPin(mode){
-  const ok=(mode==='s'&&pins[mode]===STAFF_PIN)||(mode==='a'&&pins[mode]===ADMIN_PIN);
-  const pfx=mode==='s'?'sp':'ap';
-  const errId=mode+'pin-err', rowId=mode+'pin-row';
-  if(ok){
-    pins[mode]=''; updatePinUI(mode);
-    go(mode==='s'?'s-staff-home':'s-admin-home');
-  } else {
-    document.getElementById(errId).textContent='!! WRONG PIN !!';
-    document.getElementById(rowId).classList.add('shake');
-    for(let i=0;i<4;i++) document.getElementById(pfx+i).classList.add('err');
+function staffPinPress(k){
+  if(k==='del'){staffPin=staffPin.slice(0,-1);updateStaffPinUI();return;}
+  if(staffPin.length>=4)return;
+  staffPin+=String(k); updateStaffPinUI();
+  if(staffPin.length===4){
     setTimeout(()=>{
-      pins[mode]=''; updatePinUI(mode);
-      document.getElementById(errId).textContent='';
-      document.getElementById(rowId).classList.remove('shake');
-    },900);
+      if(staffPin===STAFF_PIN){staffPin='';updateStaffPinUI();go('s-staff-home');}
+      else{
+        document.getElementById('spin-err').textContent='!! WRONG PIN !!';
+        document.getElementById('spin-row').classList.add('shake');
+        for(let i=0;i<4;i++) document.getElementById('spd'+i).classList.add('err');
+        setTimeout(()=>{staffPin='';updateStaffPinUI();document.getElementById('spin-err').textContent='';document.getElementById('spin-row').classList.remove('shake');},900);
+      }
+    },120);
   }
 }
+function doStaffLogout(){stopCamera();go('s-welcome');showToast('STAFF LOGGED OUT','info');}
 
 // ═══════════════════════════════════════════
-// STAFF — LIST
+// ADMIN PIN
 // ═══════════════════════════════════════════
-function sTab(t){
-  ['list','scan'].forEach(k=>{
-    document.getElementById('stab-'+k).style.display=k===t?'block':'none';
-    document.getElementById('snb-'+k).classList.toggle('on',k===t);
-  });
-  if(t==='list') stopCamera('s');
+function updateAdminPinUI(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('apd'+i);
+    d.innerHTML=i<adminPin.length?`<div class="pin-pip" style="background:var(--adm);box-shadow:0 0 6px var(--adm);"></div>`:'';
+    d.classList.toggle('on-adm',i<adminPin.length); d.classList.remove('err');
+  }
 }
-function renderStaffList(){
+function adminPinPress(k){
+  if(k==='del'){adminPin=adminPin.slice(0,-1);updateAdminPinUI();return;}
+  if(adminPin.length>=4)return;
+  adminPin+=String(k); updateAdminPinUI();
+  if(adminPin.length===4){
+    setTimeout(()=>{
+      if(adminPin===ADMIN_PIN){adminPin='';updateAdminPinUI();go('s-admin-dash');}
+      else{
+        document.getElementById('apin-err').textContent='!! WRONG PIN !!';
+        document.getElementById('apin-row').classList.add('shake');
+        for(let i=0;i<4;i++) document.getElementById('apd'+i).classList.add('err');
+        setTimeout(()=>{adminPin='';updateAdminPinUI();document.getElementById('apin-err').textContent='';document.getElementById('apin-row').classList.remove('shake');},900);
+      }
+    },120);
+  }
+}
+function doAdminLogout(){stopAdminCamera();go('s-welcome');showToast('ADMIN LOGGED OUT','info');}
+
+// ═══════════════════════════════════════════
+// STAFF HOME
+// ═══════════════════════════════════════════
+function renderStaffHome(){
+  document.getElementById('sh-members').textContent=customers.length;
+  document.getElementById('sh-visits').textContent=customers.reduce((a,c)=>a+(c.visits||0),0);
+  renderCustomerList();
+}
+function renderCustomerList(){
   const q=(document.getElementById('staff-search')?.value||'').toUpperCase();
-  const list=customers.filter(c=>c.name.includes(q)||c.phone.includes(q)||c.id.includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name));
-  document.getElementById('staff-list').innerHTML=list.length===0
-    ?'<div style="font-size:7px;color:rgba(255,0,255,.2);padding:16px;text-align:center;">NO CUSTOMERS FOUND</div>'
-    :list.map(c=>{
-      const pr=pendingRewards(c).length;
-      return `<div class="c-row" onclick="openStamp('${c.id}','staff')">
-        <div class="c-av">${c.name.charAt(0)}</div>
-        <div style="flex:1;">
-          <div style="font-size:8px;color:var(--g);margin-bottom:3px;">${c.name}</div>
-          <div style="font-size:6px;color:rgba(0,229,255,.3);">${c.phone}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:7px;color:var(--y);">☕ ${c.stamps}/10</div>
-          ${pr>0?`<div style="font-size:5px;color:var(--g);margin-top:2px;">★ ${pr} reward${pr>1?'s':''}</div>`:''}
-        </div>
-      </div>`;
-    }).join('');
+  const sorted=[...customers].filter(c=>!q||c.name.includes(q)||c.phone.includes(q)||c.id.includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
+  const el=document.getElementById('staff-customer-list');
+  if(!sorted.length){el.innerHTML='<div style="font-size:6px;color:rgba(255,0,255,.3);padding:14px;text-align:center;">NO PLAYERS FOUND</div>';return;}
+  el.innerHTML=sorted.map(c=>{
+    const bday=isBirthdayMonth(c)&&!bdayUsed(c)?'🎂 ':'';
+    const pr=pendingRewards(c).length;
+    return `<div class="c-row" onclick="openStaffDetail('${c.id}')">
+      <div class="c-av">${c.name.charAt(0)}</div>
+      <div style="flex:1;">
+        <div style="font-size:8px;color:var(--g);margin-bottom:3px;">${bday}${c.name}</div>
+        <div style="font-size:6px;color:rgba(0,229,255,.4);">${c.phone}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:7px;color:var(--y);">☕ ${c.stamps}/10</div>
+        ${pr>0?`<div style="font-size:5px;color:var(--g);margin-top:2px;">★ ${pr} REWARD${pr>1?'S':''}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
 }
-function openStamp(id, from='staff'){
-  scannedCustomer=customers.find(c=>c.id===id);
-  stampBackDest= from==='staff' ? 's-staff-home' : 's-admin-home';
-  go('s-stamp');
-}
+function openStaffDetail(id){selectedCustomer=customers.find(c=>c.id===id);go('s-staff-detail');}
 
 // ═══════════════════════════════════════════
-// CAMERAS  (separate instances for s/a)
+// STAFF DETAIL
 // ═══════════════════════════════════════════
-let cameras={s:{active:false,inst:null}, a:{active:false,inst:null}};
-function toggleCamera(m){ cameras[m].active?stopCamera(m):startCamera(m); }
-function startCamera(m){
-  const rdId=m==='s'?'qr-reader':'qr-reader-a';
-  const phId=m==='s'?'scan-ph':'scan-ph-a';
-  const btnId=m==='s'?'btn-cam':'btn-cam-a';
-  const re=document.getElementById(rdId), ph=document.getElementById(phId);
-  const btn=document.getElementById(btnId);
-  if(typeof Html5Qrcode==='undefined'){showToast('SCANNER NOT LOADED','err');return;}
-  ph.style.display='none'; re.style.display='block'; re.innerHTML='';
-  const inst=new Html5Qrcode(rdId);
-  inst.start({facingMode:"environment"},{fps:10,qrbox:{width:200,height:200}},
-    (decoded)=>{stopCamera(m); openStamp(decoded, m==='s'?'staff':'admin');},
-    ()=>{}
-  ).then(()=>{
-    cameras[m]={active:true,inst};
-    if(btn){btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';}
-  }).catch(()=>{
-    re.style.display='none'; ph.style.display='block';
-    showToast('CAMERA UNAVAILABLE','err');
-  });
-}
-function stopCamera(m){
-  const c=cameras[m];
-  if(!c||!c.active||!c.inst) return;
-  c.inst.stop().catch(()=>{}).finally(()=>{
-    cameras[m]={active:false,inst:null};
-    const rdId=m==='s'?'qr-reader':'qr-reader-a';
-    const phId=m==='s'?'scan-ph':'scan-ph-a';
-    const btnId=m==='s'?'btn-cam':'btn-cam-a';
-    const rd=document.getElementById(rdId), ph=document.getElementById(phId);
-    const btn=document.getElementById(btnId);
-    if(rd){rd.style.display='none';rd.innerHTML='';}
-    if(ph) ph.style.display='block';
-    if(btn){btn.textContent='▶ START CAMERA SCAN';btn.className='btn btn-b';}
-  });
-}
-function doPhoneScan(m){
-  const inpId=m==='s'?'scan-phone':'scan-phone-a';
-  const ph=document.getElementById(inpId).value.trim();
-  const found=customers.find(c=>c.phone===ph);
-  if(found) openStamp(found.id, m==='s'?'staff':'admin');
-  else showToast('PLAYER NOT FOUND','err');
-  document.getElementById(inpId).value='';
-}
-
-// ═══════════════════════════════════════════
-// STAMP SCREEN
-// ═══════════════════════════════════════════
-let coolTimer=null;
-function addHist(idx,type,note=''){
-  if(!customers[idx].history) customers[idx].history=[];
-  customers[idx].history.push({date:today(),type,...(note?{note}:{})});
-}
-function syncSc(id){
-  const c=customers.find(x=>x.id===id);
-  if(currentCustomer?.id===id) currentCustomer=c;
-  scannedCustomer=c;
-}
-
-function renderStamp(){
-  const c=scannedCustomer; if(!c) return;
-  renderOffers('st-offers',c);
-  document.getElementById('st-av').textContent=c.name.charAt(0);
-  document.getElementById('st-cname').textContent=c.name;
-  document.getElementById('st-cphone').textContent='📞 '+c.phone;
+function renderStaffDetail(){
+  const c=selectedCustomer; if(!c)return;
+  document.getElementById('sd-avatar').textContent=c.name.charAt(0);
+  document.getElementById('sd-name').textContent=c.name;
   const rd=(c.rewards||[]).filter(r=>r.redeemed).length;
-  document.getElementById('st-cmeta').textContent=c.id+' · '+rd+' redeemed · '+(c.visits||0)+' visits';
-  document.getElementById('st-slabel').textContent=c.stamps+'/10';
-  document.getElementById('st-ready').style.display=c.stamps>=10?'inline':'none';
-  renderHP('st-stamps',c.stamps);
-  document.getElementById('st-prog').style.width=(c.stamps/10*100)+'%';
-  document.getElementById('st-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
-  renderRewardChips('st-rewards-list',c,true);
-  document.getElementById('btn-add').disabled=c.stamps>=10;
-  document.getElementById('btn-redeem').disabled=pendingRewards(c).length===0;
-  document.getElementById('btn-bday').style.display=
-    (isBirthdayMonth(c)&&!birthdayUsed(c))?'block':'none';
+  document.getElementById('sd-meta').textContent=`${c.id}\n${c.phone} · ${rd} REDEEMED · ${c.visits||0} VISITS`;
+  renderOffers('sd-offers',c);
+  document.getElementById('sd-stamp-lbl').textContent=c.stamps+'/10';
+  document.getElementById('sd-ready').style.display=c.stamps>=10?'inline':'none';
+  renderHPBar(document.getElementById('sd-stamps'),c.stamps);
+  document.getElementById('sd-prog').style.width=(c.stamps/10*100)+'%';
+  document.getElementById('sd-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
+  renderRewardChips('sd-rewards-list',c,true,'sdRedeemById');
+  document.getElementById('sd-btn-add').disabled=c.stamps>=10;
+  document.getElementById('sd-btn-redeem').disabled=pendingRewards(c).length===0;
+  document.getElementById('sd-btn-bday').style.display=(isBirthdayMonth(c)&&!bdayUsed(c))?'block':'none';
 }
-
-let lastStamp=0;
-function addStamp(){
+function sdAddStamp(){
   const now=Date.now();
-  if(now-lastStamp<5000){
-    showToast('WAIT '+Math.ceil((5000-(now-lastStamp))/1000)+'s','err'); return;
-  }
-  lastStamp=now;
-  const idx=customers.findIndex(x=>x.id===scannedCustomer.id);
-  if(customers[idx].stamps>=10) return;
-  // Visits always +1 regardless of Tuesday
+  if(now-lastStampTime<5000){showToast('WAIT '+Math.ceil((5000-(now-lastStampTime))/1000)+'s','err');return;}
+  lastStampTime=now;
+  const idx=customers.findIndex(x=>x.id===selectedCustomer.id);
+  if(customers[idx].stamps>=10)return;
+  // visits: always +1 per transaction
   customers[idx].visits=(customers[idx].visits||0)+1;
-  // Stamps +1 or +2 on Tuesday
-  const add=isTuesday()?2:1;
-  customers[idx].stamps=Math.min(customers[idx].stamps+add,10);
-  addHist(idx,'stamp',isTuesday()?'double stamp tuesday':'');
-  // Auto-grant reward at 10
+  // stamps: always +1
+  customers[idx].stamps=Math.min(customers[idx].stamps+1,10);
+  addHist(idx,'stamp');
+  // auto-earn reward on full card
   if(customers[idx].stamps>=10){
-    const earned=today(), expires=addDays(today(),REWARD_DAYS);
-    customers[idx].rewards.push({id:genRId(),earned,expires,redeemed:false,redeemedDate:null,source:'stamps'});
+    const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
+    customers[idx].rewards.push({id:genRid(),earned,expires,redeemed:false,redeemedDate:null,note:'10-stamp'});
     customers[idx].stamps=0;
     addHist(idx,'reward','10-stamp reward earned');
+    showToast('★ FREE COFFEE EARNED! ★');
+  } else {
+    showToast('☕ STAMP ADDED ('+customers[idx].stamps+'/10)');
   }
-  syncSc(customers[idx].id); save(); renderStamp();
-  // pop anim
-  const pips=document.querySelectorAll('#st-stamps .hp-pip');
-  const pi=Math.max(0,Math.min((scannedCustomer.stamps||1)-1,9));
+  syncCustomer(customers[idx].id); saveData(); renderStaffDetail();
+  // pop animation
+  const pips=document.querySelectorAll('#sd-stamps .hp-pip');
+  const pi=Math.max(0,Math.min(customers[idx].stamps-1+(customers[idx].stamps===0?10:0),9));
   if(pips[pi]){pips[pi].classList.remove('pop');void pips[pi].offsetWidth;pips[pi].classList.add('pop');}
-  if(isTuesday()) showToast('⚡ DOUBLE STAMP! +2 STAMPS / +1 VISIT');
-  else showToast('☕ STAMP ADDED · VISIT #'+(scannedCustomer.visits||1));
   // cooldown
   clearInterval(coolTimer);
   coolTimer=setInterval(()=>{
-    const r=Math.ceil((5000-(Date.now()-lastStamp))/1000);
-    const el=document.getElementById('st-cooldown');
+    const r=Math.ceil((5000-(Date.now()-lastStampTime))/1000);
+    const el=document.getElementById('sd-cooldown');
     if(el) el.textContent=r>0?'COOLDOWN: '+r+'s':'';
     if(r<=0) clearInterval(coolTimer);
   },500);
 }
-
-function redeemCoffee(){
-  const pr=pendingRewards(scannedCustomer);
+function sdRedeemCoffee(){
+  const pr=pendingRewards(selectedCustomer);
   if(!pr.length){showToast('NO VALID REWARDS','err');return;}
-  redeemById(scannedCustomer.id, pr[0].id);
+  sdRedeemById(pr[0].id);
 }
-function redeemById(custId, rid){
-  const idx=customers.findIndex(x=>x.id===custId);
+function sdRedeemById(rid){
+  const idx=customers.findIndex(x=>x.id===selectedCustomer.id);
   const ri=customers[idx].rewards.findIndex(r=>r.id===rid);
-  if(ri<0){showToast('REWARD NOT FOUND','err');return;}
-  const src=customers[idx].rewards[ri].source||'stamps';
-  if(src==='admin'||src==='birthday'){
-    // admin/birthday grants don't block — just mark redeemed
-  }
+  if(ri<0)return;
   customers[idx].rewards[ri].redeemed=true;
-  customers[idx].rewards[ri].redeemedDate=today();
+  customers[idx].rewards[ri].redeemedDate=todayStr();
   addHist(idx,'reward','free coffee redeemed');
-  syncSc(customers[idx].id); save();
-  if(scannedCustomer) renderStamp();
-  if(adminCustomer?.id===custId) renderAdminCust();
-  showToast('★ FREE COFFEE REDEEMED! ★');
+  syncCustomer(customers[idx].id); saveData(); renderStaffDetail();
+  showToast('★★ FREE COFFEE REDEEMED! ★★');
 }
-
-function grantBirthday(){
-  const idx=customers.findIndex(x=>x.id===scannedCustomer.id);
-  const earned=today(), expires=addDays(today(),REWARD_DAYS);
-  customers[idx].rewards.push({id:genRId(),earned,expires,redeemed:false,redeemedDate:null,source:'birthday'});
-  customers[idx].birthdayRewardYear=new Date().getFullYear();
-  addHist(idx,'birthday','birthday month free coffee granted');
-  syncSc(customers[idx].id); save(); renderStamp();
+function sdGrantBirthday(){
+  const idx=customers.findIndex(x=>x.id===selectedCustomer.id);
+  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
+  customers[idx].rewards.push({id:genRid(),earned,expires,redeemed:false,redeemedDate:null,note:'birthday'});
+  customers[idx].birthdayYear=new Date().getFullYear();
+  addHist(idx,'birthday','birthday month reward granted');
+  syncCustomer(customers[idx].id); saveData(); renderStaffDetail();
   showToast('🎂 BIRTHDAY REWARD GRANTED!','info');
 }
 
 // ═══════════════════════════════════════════
-// ADMIN — TABS
+// STAFF CAMERA
 // ═══════════════════════════════════════════
-function aTab(t){
-  ['dash','custs','rdm','scan'].forEach(k=>{
-    document.getElementById('atab-'+k).style.display=k===t?'block':'none';
-    document.getElementById('anb-'+k).classList.toggle('on',k===t);
-  });
-  if(t==='dash')  renderAdminDash();
-  if(t==='custs') renderAdminList();
-  if(t==='rdm')   renderRedemptions();
-  if(t!=='scan')  stopCamera('a');
+function toggleCamera(){cameraActive?stopCamera():startCamera();}
+function startCamera(){
+  const rd=document.getElementById('qr-reader'),ph=document.getElementById('scan-placeholder'),btn=document.getElementById('btn-cam');
+  if(typeof Html5Qrcode==='undefined'){showToast('SCANNER NOT LOADED','err');return;}
+  ph.style.display='none'; rd.style.display='block'; rd.innerHTML='';
+  html5QrCode=new Html5Qrcode("qr-reader");
+  html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:180,height:180}},
+    decoded=>{
+      const id=decoded.trim();
+      const c=customers.find(x=>x.id===id);
+      stopCamera();
+      if(c){selectedCustomer=c;go('s-staff-detail');}
+      else showToast('QR NOT RECOGNISED','err');
+    },
+    ()=>{}
+  ).then(()=>{cameraActive=true;btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';})
+   .catch(()=>{rd.style.display='none';ph.style.display='block';showToast('CAMERA UNAVAILABLE','err');});
+}
+function stopCamera(){
+  if(html5QrCode&&cameraActive){
+    html5QrCode.stop().catch(()=>{}).finally(()=>{
+      html5QrCode=null; cameraActive=false;
+      const btn=document.getElementById('btn-cam');if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-b';}
+      const ph=document.getElementById('scan-placeholder'),rd=document.getElementById('qr-reader');
+      if(ph)ph.style.display='block';if(rd){rd.style.display='none';rd.innerHTML='';}
+    });
+  }
+}
+function doPhoneScan(){
+  const v=document.getElementById('scan-phone').value.trim();
+  const c=customers.find(x=>x.phone===v);
+  if(c){selectedCustomer=c;go('s-staff-detail');}else showToast('PLAYER NOT FOUND','err');
+  document.getElementById('scan-phone').value='';
 }
 
+// ═══════════════════════════════════════════
+// ADMIN CAMERA (separate instance)
+// ═══════════════════════════════════════════
+function toggleAdminCamera(){admCamActive?stopAdminCamera():startAdminCamera();}
+function startAdminCamera(){
+  const rd=document.getElementById('qr-reader-adm'),ph=document.getElementById('scan-ph-adm'),btn=document.getElementById('btn-cam-adm');
+  if(typeof Html5Qrcode==='undefined'){showToast('SCANNER NOT LOADED','err');return;}
+  ph.style.display='none'; rd.style.display='block'; rd.innerHTML='';
+  html5QrCodeAdm=new Html5Qrcode("qr-reader-adm");
+  html5QrCodeAdm.start({facingMode:"environment"},{fps:10,qrbox:{width:180,height:180}},
+    decoded=>{
+      const id=decoded.trim();
+      const c=customers.find(x=>x.id===id);
+      stopAdminCamera();
+      if(c){adminCustomer=c;go('s-admin-detail');}
+      else showToast('QR NOT RECOGNISED','err');
+    },
+    ()=>{}
+  ).then(()=>{admCamActive=true;btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';})
+   .catch(()=>{rd.style.display='none';ph.style.display='block';showToast('CAMERA UNAVAILABLE','err');});
+}
+function stopAdminCamera(){
+  if(html5QrCodeAdm&&admCamActive){
+    html5QrCodeAdm.stop().catch(()=>{}).finally(()=>{
+      html5QrCodeAdm=null; admCamActive=false;
+      const btn=document.getElementById('btn-cam-adm');if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-adm';}
+      const ph=document.getElementById('scan-ph-adm'),rd=document.getElementById('qr-reader-adm');
+      if(ph)ph.style.display='block';if(rd){rd.style.display='none';rd.innerHTML='';}
+    });
+  }
+}
+function doAdminPhoneScan(){
+  const v=document.getElementById('scan-phone-adm').value.trim();
+  const c=customers.find(x=>x.phone===v);
+  if(c){adminCustomer=c;go('s-admin-detail');}else showToast('PLAYER NOT FOUND','err');
+  document.getElementById('scan-phone-adm').value='';
+}
+
+// ═══════════════════════════════════════════
+// ADMIN DASHBOARD
+// ═══════════════════════════════════════════
 function renderAdminDash(){
-  const n=customers.length;
-  const totalV=customers.reduce((s,c)=>s+(c.visits||0),0);
-  const allRw=customers.flatMap(c=>c.rewards||[]);
-  const redeemed=allRw.filter(r=>r.redeemed).length;
-  const active=allRw.filter(r=>!r.redeemed&&r.expires>=today()).length;
-  const avgS=n?Math.round(customers.reduce((s,c)=>s+(c.stamps||0),0)/n*10)/10:0;
-  document.getElementById('db-members').textContent=n;
-  document.getElementById('db-visits').textContent=totalV;
+  const total=customers.length;
+  const visits=customers.reduce((a,c)=>a+(c.visits||0),0);
+  const allRew=customers.flatMap(c=>c.rewards||[]);
+  const redeemed=allRew.filter(r=>r.redeemed).length;
+  const active=customers.flatMap(c=>pendingRewards(c)).length;
+  const avgS=total?Math.round(customers.reduce((a,c)=>a+(c.stamps||0),0)/total*10)/10:0;
+  document.getElementById('db-members').textContent=total;
+  document.getElementById('db-visits').textContent=visits;
   document.getElementById('db-redeemed').textContent=redeemed;
   document.getElementById('db-active').textContent=active;
   document.getElementById('db-avg-bar').style.width=(avgS/10*100)+'%';
   document.getElementById('db-avg-lbl').textContent=avgS+'/10';
   document.getElementById('db-avg-text').textContent='AVG '+avgS;
-  // top
-  const top=[...customers].sort((a,b)=>
-    (b.rewards||[]).filter(r=>r.redeemed).length-(a.rewards||[]).filter(r=>r.redeemed).length
-  ).slice(0,3);
+  // Top 3
+  const top=[...customers].sort((a,b)=>(b.rewards||[]).filter(r=>r.redeemed).length-(a.rewards||[]).filter(r=>r.redeemed).length).slice(0,3);
   const medals=['🥇','🥈','🥉'];
   document.getElementById('db-top').innerHTML=top.length
-    ?top.map((c,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;
-        border-bottom:1px solid rgba(176,96,255,.08);">
+    ?top.map((c,i)=>`<div class="stat-row">
         <span style="font-size:13px;">${medals[i]}</span>
-        <div style="flex:1;font-size:7px;color:var(--g);">${c.name}
-          <div style="font-size:5px;color:rgba(0,229,255,.3);margin-top:1px;">${c.visits||0} visits</div>
-        </div>
+        <div style="flex:1;margin-left:8px;"><div style="font-size:7px;color:var(--g);">${c.name}</div>
+          <div style="font-size:5px;color:rgba(0,229,255,.3);margin-top:1px;">${c.id}</div></div>
         <div style="font-size:7px;color:var(--y);">${(c.rewards||[]).filter(r=>r.redeemed).length} ☕</div>
       </div>`).join('')
-    :'<div style="font-size:6px;color:rgba(176,96,255,.18);padding:6px;">NO DATA YET</div>';
-  // recent
+    :'<div style="font-size:6px;color:rgba(176,96,255,.2);padding:6px;">NO DATA YET</div>';
+  // Recent activity
   const evts=[];
-  customers.forEach(c=>(c.history||[]).forEach(h=>evts.push({...h,name:c.name})));
+  customers.forEach(c=>(c.history||[]).forEach(h=>evts.push({...h,cname:c.name})));
   evts.sort((a,b)=>b.date.localeCompare(a.date));
-  const icons={stamp:'☕',reward:'🏆',birthday:'🎂'};
-  document.getElementById('db-activity').innerHTML=evts.slice(0,10).map(e=>`
-    <div class="h-row">
-      <span class="h-ico">${icons[e.type]||'•'}</span>
-      <div class="h-txt">${e.name}
-        <span style="color:rgba(0,229,255,.35);font-size:6px;margin-left:6px;">${e.note||e.type}</span></div>
-      <span class="h-date">${e.date}</span>
-    </div>`).join('')||'<div style="font-size:6px;color:rgba(176,96,255,.18);padding:6px;">NO ACTIVITY YET</div>';
+  document.getElementById('db-activity').innerHTML=evts.slice(0,12).map(e=>`
+    <div class="hist-item">
+      <span class="hist-icon">${H_ICO[e.type]||'•'}</span>
+      <div class="hist-text"><span style="color:var(--g);">${e.cname}</span>
+        <span style="color:rgba(0,229,255,.4);margin-left:8px;font-size:5px;">${H_LBL[e.type]||e.type}</span>
+        ${e.note?`<div style="font-size:5px;color:rgba(0,229,255,.3);">${e.note}</div>`:''}
+      </div>
+      <span class="hist-date">${e.date}</span>
+    </div>`).join('')||'<div style="font-size:6px;color:rgba(176,96,255,.2);padding:6px;">NO ACTIVITY</div>';
 }
 
-function renderRedemptions(){
+// ═══════════════════════════════════════════
+// ADMIN REDEMPTIONS
+// ═══════════════════════════════════════════
+function renderAdminRdm(){
   const all=[];
   customers.forEach(c=>(c.rewards||[]).filter(r=>r.redeemed).forEach(r=>
-    all.push({name:c.name,cid:c.id,date:r.redeemedDate||'–',src:r.source||'stamps'})
+    all.push({name:c.name,id:c.id,date:r.redeemedDate||'–',note:r.note||'10-stamp'})
   ));
   all.sort((a,b)=>b.date.localeCompare(a.date));
-  const srcLabel={stamps:'10-STAMP REWARD',admin:'ADMIN GRANT',birthday:'BIRTHDAY REWARD'};
   document.getElementById('rdm-list').innerHTML=all.length===0
-    ?'<div style="font-size:7px;color:rgba(176,96,255,.18);padding:16px;text-align:center;">NO REDEMPTIONS YET</div>'
+    ?'<div style="font-size:6px;color:rgba(176,96,255,.2);padding:16px;text-align:center;">NO REDEMPTIONS YET</div>'
     :all.map(r=>`<div class="rdm-row">
-        <div>
-          <div style="font-size:7px;color:var(--g);">${r.name}</div>
-          <div style="font-size:5px;color:rgba(0,229,255,.3);margin-top:2px;">${r.cid}</div>
-        </div>
+        <div style="flex:1;"><div style="font-size:7px;color:var(--g);">${r.name}</div>
+          <div style="font-size:5px;color:rgba(0,229,255,.3);margin-top:1px;">${r.id}</div></div>
         <div style="text-align:right;">
-          <div style="font-size:6px;color:var(--adm);">☕ ${srcLabel[r.src]||r.src}</div>
-          <div style="font-size:6px;color:rgba(0,229,255,.35);">${r.date}</div>
+          <div style="font-size:6px;color:var(--adm);">☕ ${r.note}</div>
+          <div style="font-size:5px;color:rgba(0,229,255,.35);margin-top:1px;">${r.date}</div>
         </div>
       </div>`).join('');
 }
 
-function renderAdminList(){
+// ═══════════════════════════════════════════
+// ADMIN PLAYER LIST
+// ═══════════════════════════════════════════
+function renderAdminPlayerList(){
   const q=(document.getElementById('admin-search')?.value||'').toUpperCase();
-  const list=customers.filter(c=>c.name.includes(q)||c.phone.includes(q)||c.id.includes(q))
-    .sort((a,b)=>a.name.localeCompare(b.name));
-  document.getElementById('admin-list').innerHTML=list.length===0
-    ?'<div style="font-size:7px;color:rgba(176,96,255,.18);padding:16px;text-align:center;">NO CUSTOMERS FOUND</div>'
-    :list.map(c=>{
+  const sorted=[...customers].filter(c=>!q||c.name.includes(q)||c.phone.includes(q)||c.id.includes(q)).sort((a,b)=>a.name.localeCompare(b.name));
+  const el=document.getElementById('admin-player-list');
+  el.innerHTML=sorted.length===0
+    ?'<div style="font-size:6px;color:rgba(176,96,255,.2);padding:14px;text-align:center;">NO PLAYERS FOUND</div>'
+    :sorted.map(c=>{
       const rd=(c.rewards||[]).filter(r=>r.redeemed).length;
       const pr=pendingRewards(c).length;
-      return `<div class="c-row" onclick="openAdminCust('${c.id}')">
-        <div class="c-av adm">${c.name.charAt(0)}</div>
+      return `<div class="c-row" onclick="openAdminDetail('${c.id}')">
+        <div class="c-av c-av-adm">${c.name.charAt(0)}</div>
         <div style="flex:1;">
           <div style="font-size:8px;color:var(--g);margin-bottom:3px;">${c.name}</div>
-          <div style="font-size:6px;color:rgba(0,229,255,.3);">${c.phone} · ${c.visits||0} visits</div>
+          <div style="font-size:6px;color:rgba(0,229,255,.35);">${c.phone} · ${c.visits||0} visits</div>
         </div>
         <div style="text-align:right;">
           <div style="font-size:7px;color:var(--y);">☕ ${c.stamps}/10</div>
-          <div style="font-size:5px;color:rgba(0,255,136,.4);margin-top:2px;">${rd} redeemed</div>
+          <div style="font-size:5px;color:rgba(0,255,136,.4);margin-top:1px;">${rd} redeemed</div>
           ${pr>0?`<div style="font-size:5px;color:var(--g);margin-top:1px;">★ ${pr} pending</div>`:''}
         </div>
       </div>`;
     }).join('');
 }
+function openAdminDetail(id){adminCustomer=customers.find(c=>c.id===id);go('s-admin-detail');}
 
-function openAdminCust(id){
-  adminCustomer=customers.find(c=>c.id===id);
-  go('s-admin-cust');
-}
-function renderAdminCust(){
-  adminCustomer=freshCust(adminCustomer);
-  const c=adminCustomer; if(!c) return;
-  renderOffers('ac-offers',c);
-  document.getElementById('ac-av').textContent=c.name.charAt(0);
-  document.getElementById('ac-name').textContent=c.name;
-  document.getElementById('ac-phone').textContent='📞 '+c.phone+' · '+c.id;
+// ═══════════════════════════════════════════
+// ADMIN DETAIL
+// ═══════════════════════════════════════════
+function renderAdminDetail(){
+  const c=customers.find(x=>x.id===adminCustomer?.id)||adminCustomer;
+  if(!c)return; adminCustomer=c;
+  document.getElementById('ad-avatar').textContent=c.name.charAt(0);
+  document.getElementById('ad-name').textContent=c.name;
   const rd=(c.rewards||[]).filter(r=>r.redeemed).length;
-  document.getElementById('ac-meta').textContent=rd+' redeemed · '+(c.visits||0)+' visits · '+c.stamps+'/10 stamps';
-  document.getElementById('ac-slabel').textContent=c.stamps+'/10';
-  document.getElementById('ac-ready').style.display=c.stamps>=10?'inline':'none';
-  renderHP('ac-stamps',c.stamps);
-  document.getElementById('ac-prog').style.width=(c.stamps/10*100)+'%';
-  document.getElementById('ac-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
-  document.getElementById('ac-rm-btn').disabled=c.stamps<=0;
-  renderRewardChips('ac-rewards-list',c,true);
-  const pr=pendingRewards(c).length;
-  document.getElementById('ac-redeem-btn').disabled=pr===0;
-  document.getElementById('ac-bday-btn').disabled=!isBirthdayMonth(c)||birthdayUsed(c);
-  // history
-  const icons={stamp:'☕',reward:'🏆',birthday:'🎂'};
-  const labels={stamp:'STAMP',reward:'FREE COFFEE',birthday:'BIRTHDAY REWARD'};
-  const h=(c.history||[]).slice().reverse().slice(0,20);
-  document.getElementById('ac-hist').innerHTML=h.length
-    ?h.map(e=>`<div class="h-row">
-        <span class="h-ico">${icons[e.type]||'•'}</span>
-        <div class="h-txt">${labels[e.type]||e.type}
-          ${e.note?`<br><span style="font-size:6px;color:rgba(0,229,255,.3);">${e.note}</span>`:''}</div>
-        <span class="h-date">${e.date}</span>
-      </div>`).join('')
-    :'<div style="font-size:7px;color:rgba(0,255,136,.18);padding:8px;">NO HISTORY</div>';
+  document.getElementById('ad-meta').textContent=`${c.id}\n${c.phone} · ${rd} REDEEMED · ${c.visits||0} VISITS`;
+  renderOffers('ad-offers',c);
+  document.getElementById('ad-stamp-lbl').textContent=c.stamps+'/10';
+  renderHPBar(document.getElementById('ad-stamps'),c.stamps);
+  document.getElementById('ad-prog').style.width=(c.stamps/10*100)+'%';
+  document.getElementById('ad-prog-t').textContent=c.stamps>=10?'FULL!':c.stamps+'/10';
+  document.getElementById('ad-rm-btn').disabled=c.stamps<=0;
+  renderRewardChips('ad-rewards-list',c,true,'adRedeemById');
+  const pending=pendingRewards(c).length>0;
+  document.getElementById('ad-redeem-btn').disabled=!pending;
+  document.getElementById('sd-btn-redeem-adm').disabled=!pending;
+  document.getElementById('ad-btn-bday').style.display=(isBirthdayMonth(c)&&!bdayUsed(c))?'block':'none';
+  renderHistList('ad-hist-list',c);
 }
-
-function adminAddStamp(){
+function adAddStamp(){
   const idx=customers.findIndex(x=>x.id===adminCustomer.id);
-  if(customers[idx].stamps>=10) return;
+  if(customers[idx].stamps>=10)return;
+  customers[idx].visits=(customers[idx].visits||0)+1;
   customers[idx].stamps++;
-  // admin stamp adjustments don't count as customer visits
+  addHist(idx,'stamp','added by admin');
   if(customers[idx].stamps>=10){
-    const earned=today(), expires=addDays(today(),REWARD_DAYS);
-    customers[idx].rewards.push({id:genRId(),earned,expires,redeemed:false,redeemedDate:null,source:'stamps'});
+    const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
+    customers[idx].rewards.push({id:genRid(),earned,expires,redeemed:false,redeemedDate:null,note:'10-stamp'});
     customers[idx].stamps=0;
-    addHist(idx,'reward','10-stamp reward (admin adjusted)');
-  } else {
-    addHist(idx,'stamp','admin adjusted +1');
-  }
-  adminCustomer=customers[idx]; save(); renderAdminCust();
-  showToast('STAMP ADDED');
+    addHist(idx,'reward','10-stamp reward earned');
+    showToast('★ FREE COFFEE EARNED! ★');
+  } else showToast('☕ STAMP ADDED ('+customers[idx].stamps+'/10)');
+  syncCustomer(customers[idx].id); saveData(); renderAdminDetail();
 }
-function adminRemoveStamp(){
+function adRemoveStamp(){
   const idx=customers.findIndex(x=>x.id===adminCustomer.id);
-  if(customers[idx].stamps<=0) return;
+  if(customers[idx].stamps<=0)return;
   customers[idx].stamps--;
-  addHist(idx,'stamp','admin adjusted -1');
-  adminCustomer=customers[idx]; save(); renderAdminCust();
+  addHist(idx,'stamp','removed by admin');
+  syncCustomer(customers[idx].id); saveData(); renderAdminDetail();
   showToast('STAMP REMOVED','info');
 }
-function adminGrantReward(){
+function adGrantReward(){
   const idx=customers.findIndex(x=>x.id===adminCustomer.id);
-  const earned=today(), expires=addDays(today(),REWARD_DAYS);
-  customers[idx].rewards.push({id:genRId(),earned,expires,redeemed:false,redeemedDate:null,source:'admin'});
+  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
+  customers[idx].rewards.push({id:genRid(),earned,expires,redeemed:false,redeemedDate:null,note:'admin-grant'});
   addHist(idx,'reward','free coffee granted by admin');
-  adminCustomer=customers[idx]; save(); renderAdminCust();
+  syncCustomer(customers[idx].id); saveData(); renderAdminDetail();
   showToast('★ FREE COFFEE GRANTED ★');
 }
-function adminRedeemReward(){
+function adRedeemCoffee(){
   const pr=pendingRewards(adminCustomer);
   if(!pr.length){showToast('NO VALID REWARDS','err');return;}
-  redeemById(adminCustomer.id, pr[0].id);
+  adRedeemById(pr[0].id);
 }
-function adminGrantBirthday(){
+function adRedeemById(rid){
   const idx=customers.findIndex(x=>x.id===adminCustomer.id);
-  if(!isBirthdayMonth(adminCustomer)||birthdayUsed(adminCustomer)){
-    showToast('BIRTHDAY REWARD NOT AVAILABLE','err');return;
-  }
-  const earned=today(), expires=addDays(today(),REWARD_DAYS);
-  customers[idx].rewards.push({id:genRId(),earned,expires,redeemed:false,redeemedDate:null,source:'birthday'});
-  customers[idx].birthdayRewardYear=new Date().getFullYear();
-  addHist(idx,'birthday','birthday month reward granted by admin');
-  adminCustomer=customers[idx]; save(); renderAdminCust();
+  const ri=customers[idx].rewards.findIndex(r=>r.id===rid);
+  if(ri<0)return;
+  customers[idx].rewards[ri].redeemed=true;
+  customers[idx].rewards[ri].redeemedDate=todayStr();
+  addHist(idx,'reward','free coffee redeemed');
+  syncCustomer(customers[idx].id); saveData(); renderAdminDetail();
+  showToast('★★ FREE COFFEE REDEEMED! ★★');
+}
+function adGrantBirthday(){
+  const idx=customers.findIndex(x=>x.id===adminCustomer.id);
+  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
+  customers[idx].rewards.push({id:genRid(),earned,expires,redeemed:false,redeemedDate:null,note:'birthday'});
+  customers[idx].birthdayYear=new Date().getFullYear();
+  addHist(idx,'birthday','birthday month reward granted');
+  syncCustomer(customers[idx].id); saveData(); renderAdminDetail();
   showToast('🎂 BIRTHDAY REWARD GRANTED!','info');
 }
 
 // ═══════════════════════════════════════════
 // BIRTHDAY DROPDOWNS
 // ═══════════════════════════════════════════
-function buildYears(pfx){
-  const el=document.getElementById(pfx+'-by');
-  if(!el) return;
-  const cur=new Date().getFullYear();
-  for(let y=cur-5;y>=cur-100;y--){
-    const o=document.createElement('option'); o.value=y; o.textContent=y; el.appendChild(o);
-  }
-}
-function buildDays(pfx){
-  const mEl=document.getElementById(pfx+'-bm'), yEl=document.getElementById(pfx+'-by');
-  const dEl=document.getElementById(pfx+'-bd');
-  if(!mEl||!yEl||!dEl) return;
-  const m=parseInt(mEl.value)||0, y=parseInt(yEl.value)||2000;
+function populateDays(mId,dId,yId){
+  const m=parseInt(document.getElementById(mId).value)||0;
+  const y=parseInt(document.getElementById(yId).value)||2000;
   const days=m?new Date(y,m,0).getDate():31;
-  const cur=dEl.value;
-  dEl.innerHTML='<option value="">DAY</option>';
-  for(let d=1;d<=days;d++){
-    const o=document.createElement('option');
-    o.value=String(d).padStart(2,'0'); o.textContent=d; dEl.appendChild(o);
-  }
-  if(cur) dEl.value=cur;
+  const dEl=document.getElementById(dId); const cur=dEl.value;
+  dEl.innerHTML='<option value="">DD</option>';
+  for(let d=1;d<=days;d++){const o=document.createElement('option');o.value=String(d).padStart(2,'0');o.textContent=d;dEl.appendChild(o);}
+  if(cur)dEl.value=cur;
+}
+function initYearSelect(yId){
+  const el=document.getElementById(yId); const cur=new Date().getFullYear();
+  for(let y=cur-5;y>=cur-100;y--){const o=document.createElement('option');o.value=y;o.textContent=y;el.appendChild(o);}
+}
+function getBday(mId,dId,yId){
+  const m=document.getElementById(mId).value,d=document.getElementById(dId).value,y=document.getElementById(yId).value;
+  return (m&&d&&y)?`${y}-${m}-${d}`:'';
 }
 
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
-buildYears('su'); buildYears('set');
-document.getElementById('su-bm').addEventListener('change',()=>buildDays('su'));
-document.getElementById('set-bm')?.addEventListener('change',()=>buildDays('set'));
-buildDays('su'); buildDays('set');
+initYearSelect('c-by'); initYearSelect('s-by');
+populateDays('c-bm','c-bd','c-by'); populateDays('s-bm','s-bd','s-by');
 document.getElementById('qr-reader').style.display='none';
-document.getElementById('qr-reader-a').style.display='none';
-window.addEventListener('beforeunload',()=>{stopCamera('s');stopCamera('a');});
+document.getElementById('qr-reader-adm').style.display='none';
+window.addEventListener('beforeunload',()=>{stopCamera();stopAdminCamera();});
 </script>
 </body>
 </html>
