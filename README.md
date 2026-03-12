@@ -10,11 +10,15 @@ The application supports three user roles:
 - **Admin** - monitors analytics and manages customer rewards
 
 The system demonstrates a complete front-end loyalty platform including reward tracking, QR scanning, and role-based dashboards.
+## Demo Credentials
+
+Staff PIN: 1234  
+Admin PIN: 0000
 
   </a>
 </p>
 <p align="center">
-<a href="https://margaritadubeau-droid.github.io/Nook/">
+<a href="https://tsyruk.github.io/Nook/">
 <img src="https://img.shields.io/badge/Try%20Live%20Demo-Open%20App-green?style=for-the-badge">
 </a>
 </p>
