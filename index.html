@@ -944,16 +944,16 @@ function xform(row){
 async function dbGetByPhone(phone){
   const {data,error}=await sb.from('customers')
     .select('*, rewards(*), history(*)')
-    .eq('phone',phone).single();
-  if(error){console.error(error);return null;}
-  return xform(data);
+    .eq('phone',phone).maybeSingle();
+  if(error){console.error('dbGetByPhone error:',error);return null;}
+  return data?xform(data):null;
 }
 async function dbGetById(id){
   const {data,error}=await sb.from('customers')
     .select('*, rewards(*), history(*)')
-    .eq('id',id).single();
-  if(error){console.error(error);return null;}
-  return xform(data);
+    .eq('id',id).maybeSingle();
+  if(error){console.error('dbGetById error:',error);return null;}
+  return data?xform(data):null;
 }
 async function dbGetAll(){
   const {data,error}=await sb.from('customers')
@@ -968,8 +968,8 @@ async function dbCreateCustomer(c){
     birthday:c.birthday||null,
     stamps:0,visits:0,birthday_year:0,since:c.since
   });
-  if(error) console.error(error);
-  return !error;
+  if(error){console.error('dbCreateCustomer error:',JSON.stringify(error));return false;}
+  return true;
 }
 async function dbUpdateCustomer(id,fields){
   const m={};
@@ -1035,7 +1035,7 @@ async function go(id){
     's-staff-detail': renderStaffDetail,
     's-admin-dash':   renderAdminDash,
     's-admin-rdm':    renderAdminRdm,
-    's-admin-players':renderAdminPlayerList,
+    's-admin-players':loadAdminPlayerList,
     's-admin-detail': renderAdminDetail,
   };
   if(asyncRenders[id]) await asyncRenders[id]();
@@ -1603,9 +1603,10 @@ async function renderAdminRdm(){
 }
 
 // ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
 // ADMIN PLAYER LIST
 // ═══════════════════════════════════════════
-async function renderAdminPlayerList(){
+async function loadAdminPlayerList(){
   showBusy(true);
   staffList=await dbGetAll();
   showBusy(false);
@@ -1634,12 +1635,10 @@ function _renderAdminListFromCache(){
       </div>`;
     }).join('');
 }
-// Hook search input (search filters the already-loaded list, no extra fetch)
+// Called by go() and by oninput on search box
 function renderAdminPlayerList(){
-  // called by go() — also called directly from oninput on search box
-  // if staffList is populated just filter; otherwise fetch
   if(staffList.length) _renderAdminListFromCache();
-  else renderAdminPlayerList(); // async version above
+  else loadAdminPlayerList();
 }
 
 async function openAdminDetail(id){
