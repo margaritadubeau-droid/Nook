@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#07070f"/>
 <title>THE NOOK</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -14,11 +18,41 @@
   --g:#00ff88;--b:#00e5ff;--p:#ff00ff;--y:#ffee00;--r:#ff3366;--o:#ff8800;
   --adm:#b060ff;
   --gg:rgba(0,255,136,.1);--bb:rgba(0,229,255,.1);--pp:rgba(255,0,255,.1);--aa:rgba(176,96,255,.1);
+  --sat: env(safe-area-inset-top,    0px);
+  --sar: env(safe-area-inset-right,  0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left,   0px);
+  /* JS will write --dvh; fallback to 1vh */
+  --dvh: 1vh;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{min-height:100%;}
-body{background:var(--bg);font-family:'Press Start 2P',monospace;
-  display:flex;align-items:flex-start;justify-content:center;padding:16px 0 40px;}
+
+/* ── GLOBAL RESET ── */
+*, *::before, *::after{box-sizing:border-box;margin:0;padding:0;}
+
+html{
+  height:100%;
+  width:100%;
+  overflow:hidden;            /* no page-level scroll */
+  -webkit-text-size-adjust:100%;  /* stop iOS font boosting */
+}
+body{
+  height:100%;
+  width:100%;
+  overflow:hidden;
+  background:var(--bg);
+  font-family:'Press Start 2P',monospace;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  /* kill any default browser margin/padding */
+  margin:0;padding:0;
+  /* prevent double-tap zoom and long-press selection globally */
+  touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;
+  /* allow text selection inside inputs/text areas */
+}
+input,textarea{-webkit-user-select:text;user-select:text;}
+
 body::before{content:'';position:fixed;inset:0;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.07) 0,rgba(0,0,0,.07) 1px,transparent 1px,transparent 2px);
   pointer-events:none;z-index:9999;}
@@ -27,23 +61,71 @@ body::after{content:'';position:fixed;inset:0;
   pointer-events:none;z-index:9998;}
 @keyframes flicker{0%,100%{opacity:1}94%{opacity:.98}97%{opacity:1}}
 
-/* ── PHONE ── */
-.phone{width:360px;min-height:680px;background:var(--bg2);
+/* ── PHONE — desktop: centred mockup; mobile: full screen ── */
+.phone{
+  width:360px;
+  /* use dvh custom prop so it matches the real visible viewport */
+  height:calc(var(--dvh,1vh) * 100);
+  min-height:580px;
+  max-height:calc(var(--dvh,1vh) * 100);
+  background:var(--bg2);
   border:3px solid var(--g);
   box-shadow:0 0 0 2px var(--bg),0 0 0 4px #002211,
     0 0 28px rgba(0,255,136,.3),0 0 60px rgba(0,255,136,.07),
     inset 0 0 30px rgba(0,255,136,.02);
-  position:relative;overflow:hidden;display:flex;flex-direction:column;
-  animation:flicker 10s infinite;}
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  animation:flicker 10s infinite;
+  /* on mobile, account for notch/home bar */
+  padding-top:var(--sat);
+}
 .phone::before{content:'';position:absolute;inset:7px;
   border:1px solid rgba(0,255,136,.08);pointer-events:none;z-index:0;}
 
+/* ── MOBILE: go truly full-screen ── */
+@media (max-width:480px){
+  body{
+    align-items:flex-start;
+    padding:0;
+    background:var(--bg2); /* no gap around the phone */
+  }
+  .phone{
+    width:100%;
+    max-width:100%;
+    height:calc(var(--dvh,1vh) * 100);
+    min-height:calc(var(--dvh,1vh) * 100);
+    border:none;
+    box-shadow:none;
+    border-radius:0;
+    animation:none; /* flicker can cause repaints on low-end phones */
+  }
+  .phone::before{display:none;} /* remove inner decorative border */
+}
+
 /* ── SCREENS ── */
-.screen{display:none;flex-direction:column;flex:1;
-  animation:pixIn .12s steps(3) forwards;position:relative;z-index:1;padding:16px 14px 0;}
+.screen{
+  display:none;flex-direction:column;flex:1;
+  animation:pixIn .12s steps(3) forwards;
+  position:relative;z-index:1;
+  padding:16px 14px 0;
+  /* leave room for bottom safe area (home indicator on iPhone) */
+  overflow:hidden;
+}
 .screen.active{display:flex;}
 @keyframes pixIn{0%{opacity:0;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}}
-.scroll{overflow-y:auto;flex:1;padding-bottom:8px;}
+
+/* ── SCROLL AREAS ── */
+.scroll{
+  overflow-y:auto;
+  overflow-x:hidden;
+  flex:1;
+  padding-bottom:calc(8px + var(--sab));
+  /* smooth momentum scroll on iOS */
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;   /* don't let scroll bleed to page */
+}
 .scroll::-webkit-scrollbar{width:3px}
 .scroll::-webkit-scrollbar-thumb{background:rgba(0,255,136,.2)}
 
@@ -64,7 +146,8 @@ body::after{content:'';position:fixed;inset:0;
 /* ── BUTTONS ── */
 .btn{font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:.03em;border:none;
   cursor:pointer;width:100%;padding:13px 10px;text-align:center;
-  transition:transform .05s,box-shadow .05s;text-transform:uppercase;margin-bottom:8px;line-height:1.7;}
+  transition:transform .05s,box-shadow .05s;text-transform:uppercase;margin-bottom:8px;line-height:1.7;
+  touch-action:manipulation;}
 .btn:active{transform:translate(2px,2px)!important;box-shadow:none!important}
 .btn:disabled{cursor:not-allowed;opacity:.28;}
 .btn-g{background:var(--g);color:#000;box-shadow:3px 3px 0 #005522,0 0 10px rgba(0,255,136,.4);}
@@ -80,10 +163,11 @@ body::after{content:'';position:fixed;inset:0;
 .btn-out{background:transparent;color:var(--g);border:2px solid rgba(0,255,136,.4);
   box-shadow:2px 2px 0 #002211;font-family:'Press Start 2P',monospace;font-size:8px;
   padding:11px;cursor:pointer;width:100%;text-align:center;margin-bottom:8px;
-  text-transform:uppercase;transition:background .1s;}
+  text-transform:uppercase;transition:background .1s;touch-action:manipulation;}
 .btn-out:hover{background:rgba(0,255,136,.07);}
 .btn-sm{font-family:'Press Start 2P',monospace;font-size:7px;border:none;cursor:pointer;
-  padding:8px 12px;text-transform:uppercase;letter-spacing:.03em;transition:transform .05s;}
+  padding:8px 12px;text-transform:uppercase;letter-spacing:.03em;transition:transform .05s;
+  touch-action:manipulation;min-height:36px;}
 .btn-sm:active{transform:translate(1px,1px);}
 .btn-sm-g{background:var(--g);color:#000;box-shadow:2px 2px 0 #005522;}
 .btn-sm-r{background:var(--r);color:#fff;box-shadow:2px 2px 0 #440011;}
@@ -100,6 +184,12 @@ select option{background:#07070f;color:var(--g);}
 .inp-b{border-color:var(--b)!important;color:var(--b)!important;caret-color:var(--b);}
 .inp-b::placeholder{color:rgba(0,229,255,.2)!important;}
 .inp-b:focus{box-shadow:inset 0 0 6px rgba(0,229,255,.12),2px 2px 0 #001522,0 0 8px rgba(0,229,255,.2)!important;}
+
+/* ── iOS ZOOM PREVENTION: inputs must be ≥16px on mobile ── */
+@media (max-width:480px){
+  input,select{font-size:16px!important;padding:14px 12px;}
+  input::placeholder{font-size:13px;}
+}
 
 /* ── LABELS ── */
 .lbl{font-size:6px;color:var(--b);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
@@ -157,10 +247,12 @@ select option{background:#07070f;color:var(--g);}
 
 /* ── BOTTOM NAVS ── */
 .nav-bar{display:flex;border-top:2px solid rgba(0,255,136,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+  padding-bottom:var(--sab);touch-action:manipulation;}
 .nav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(0,255,136,.1);
   color:rgba(0,255,136,.3);font-family:'Press Start 2P',monospace;font-size:6px;
-  padding:11px 4px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+  padding:11px 4px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
+  touch-action:manipulation;min-height:44px;}
 .nav-btn:last-child{border-right:none;}
 .nav-btn.active{color:var(--g);background:rgba(0,255,136,.05);text-shadow:0 0 6px rgba(0,255,136,.5);
   border-top:2px solid var(--g);margin-top:-2px;}
@@ -168,10 +260,12 @@ select option{background:#07070f;color:var(--g);}
 .nav-btn .ni{font-size:13px;display:block;margin-bottom:2px;}
 
 .snav-bar{display:flex;border-top:2px solid rgba(255,0,255,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+  padding-bottom:var(--sab);touch-action:manipulation;}
 .snav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(255,0,255,.1);
   color:rgba(255,0,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
-  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
+  touch-action:manipulation;min-height:44px;}
 .snav-btn:last-child{border-right:none;}
 .snav-btn.active{color:var(--p);background:rgba(255,0,255,.05);text-shadow:0 0 6px rgba(255,0,255,.5);
   border-top:2px solid var(--p);margin-top:-2px;}
@@ -182,15 +276,18 @@ select option{background:#07070f;color:var(--g);}
 .snav-btn.adm-entry:hover{color:var(--adm)!important;background:rgba(176,96,255,.05)!important;}
 
 .anav-bar{display:flex;border-top:2px solid rgba(176,96,255,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;}
+  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+  padding-bottom:var(--sab);touch-action:manipulation;}
 .anav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(176,96,255,.1);
   color:rgba(176,96,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
-  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;}
+  padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
+  touch-action:manipulation;min-height:44px;}
 .anav-btn:last-child{border-right:none;}
 .anav-btn.active{color:var(--adm);background:rgba(176,96,255,.05);text-shadow:0 0 6px rgba(176,96,255,.5);
   border-top:2px solid var(--adm);margin-top:-2px;}
 .anav-btn:hover:not(.active){color:rgba(176,96,255,.65);}
 .anav-btn .ni{font-size:12px;display:block;margin-bottom:2px;}
+
 
 /* ── SCANNER ── */
 .scan-box{background:#000;border:2px solid var(--b);box-shadow:0 0 12px rgba(0,229,255,.2);
@@ -1768,6 +1865,22 @@ populateDays('c-bm','c-bd','c-by'); populateDays('s-bm','s-bd','s-by');
 document.getElementById('qr-reader').style.display='none';
 document.getElementById('qr-reader-adm').style.display='none';
 window.addEventListener('beforeunload',()=>{stopCamera();stopAdminCamera();});
+
+// ── DVH SHIM ─────────────────────────────────────────────
+// iOS Safari changes the visible height as the toolbar shows/hides.
+// 100vh = full page height (ignores toolbar), causing overflow.
+// We measure window.innerHeight — the ACTUAL visible pixels — and
+// write it as --dvh so our height:calc(var(--dvh)*100) is always exact.
+function setDvh(){
+  const dvh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--dvh', dvh + 'px');
+}
+setDvh();
+// Re-run on resize (toolbar toggle, orientation change)
+window.addEventListener('resize', setDvh);
+// Also fire on orientationchange for older iOS
+window.addEventListener('orientationchange', ()=>{ setTimeout(setDvh, 150); });
+
 </script>
 </body>
 </html>
