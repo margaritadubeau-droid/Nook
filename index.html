@@ -1075,15 +1075,36 @@ async function callEdge(fn, body, token = null) {
   const headers = {
     'Content-Type': 'application/json',
     'apikey': ANON_KEY,
+    // Supabase requires Authorization even on --no-verify-jwt functions
+    // for the CORS preflight to pass at the infrastructure level
+    'Authorization': `Bearer ${token || ANON_KEY}`,
   };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(`${EDGE}/${fn}`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({ error: 'Network error' }));
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+  // 10-second timeout so we never hang silently
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 10000);
+
+  let res;
+  try {
+    res = await fetch(`${EDGE}/${fn}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } catch (e) {
+    clearTimeout(timer);
+    const msg = e.name === 'AbortError'
+      ? `Timeout calling ${fn} — check Edge Function logs`
+      : `Network error calling ${fn}: ${e.message}`;
+    console.error(msg, e);
+    throw new Error(msg);
+  }
+  clearTimeout(timer);
+
+  const data = await res.json().catch(() => ({ error: 'Bad JSON response' }));
+  console.log(`[${fn}] ${res.status}`, data);
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status} from ${fn}`);
   return data;
 }
 
