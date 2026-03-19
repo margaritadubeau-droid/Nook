@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
 <style>
 :root{
   --bg:#07070f;--bg2:#0d0d1a;
@@ -191,6 +191,78 @@ select option{background:#07070f;color:var(--g);}
   input::placeholder{font-size:13px;}
 }
 
+/* ════════════════════════════════════════════
+   TABLET — portrait + landscape (481px–1023px)
+   iPad 10.2": portrait 768×1024, landscape 1024×768
+   ════════════════════════════════════════════ */
+@media (min-width:481px) and (max-width:1023px){
+  /* Wider phone container — fills tablet nicely */
+  .phone{
+    width:min(520px,88vw);
+    border-width:3px;
+  }
+
+  /* Slightly roomier screen padding */
+  .screen{padding:20px 18px 0;}
+
+  /* Nav: bigger text + icons, taller tap targets */
+  .nav-btn,.snav-btn,.anav-btn{
+    font-size:8px;
+    padding:13px 6px 16px;
+    min-height:56px;
+  }
+  .nav-btn .ni,.snav-btn .ni,.anav-btn .ni{
+    font-size:18px;
+    margin-bottom:4px;
+  }
+
+  /* Bump button font sizes */
+  .btn{font-size:10px;padding:15px 12px;}
+  .btn-sm{font-size:8px;padding:10px 14px;}
+
+  /* Labels and small text — slightly more readable */
+  .lbl,.lbl-p,.lbl-g,.lbl-adm{font-size:7px;}
+  .card,.card-b,.card-p,.card-adm{padding:15px;}
+
+  /* Inputs comfortable at tablet size */
+  input,select{font-size:16px;padding:14px 12px;}
+}
+
+/* ── TABLET LANDSCAPE specifically (iPad 10.2" = 1024×768) ── */
+@media (min-width:481px) and (max-width:1023px) and (orientation:landscape){
+  body{align-items:center;background:var(--bg);}
+
+  .phone{
+    /* In landscape, height is the constraint — fill it fully */
+    width:min(560px,58vw);
+    height:calc(var(--dvh,1vh) * 100);
+    max-height:calc(var(--dvh,1vh) * 100);
+    /* Keep the glowing phone-mockup border — looks great on tablet */
+    border:3px solid var(--g);
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 4px #002211,
+      0 0 32px rgba(0,255,136,.35),
+      0 0 70px rgba(0,255,136,.1),
+      inset 0 0 40px rgba(0,255,136,.02);
+    animation:flicker 10s infinite;
+    border-radius:0;
+  }
+  .phone::before{display:block;}
+
+  /* Landscape is tight on height — shrink nav slightly */
+  .nav-btn,.snav-btn,.anav-btn{
+    padding:9px 6px 12px;
+    min-height:48px;
+    font-size:7px;
+  }
+  .nav-btn .ni,.snav-btn .ni,.anav-btn .ni{
+    font-size:15px;
+    margin-bottom:2px;
+  }
+}
+
+
 /* ── LABELS ── */
 .lbl{font-size:6px;color:var(--b);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
 .lbl-p{font-size:6px;color:var(--p);letter-spacing:.14em;display:block;margin-bottom:5px;text-transform:uppercase;}
@@ -246,47 +318,59 @@ select option{background:#07070f;color:var(--g);}
 .num-adm:hover{border-color:var(--adm)!important;background:rgba(176,96,255,.06)!important;}
 
 /* ── BOTTOM NAVS ── */
-.nav-bar{display:flex;border-top:2px solid rgba(0,255,136,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+.nav-bar{display:flex;border-top:2px solid rgba(0,255,136,.35);
+  margin:8px -14px 0;background:rgba(0,0,0,.95);flex-shrink:0;
   padding-bottom:var(--sab);touch-action:manipulation;}
-.nav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(0,255,136,.1);
-  color:rgba(0,255,136,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+.nav-btn{flex:1;background:transparent;border:none;
+  border-right:1px solid rgba(0,255,136,.15);
+  color:rgba(0,255,136,.65);          /* ↑ was .30 */
+  font-family:'Press Start 2P',monospace;font-size:7px;   /* ↑ was 6px */
   padding:11px 4px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
-  touch-action:manipulation;min-height:44px;}
+  touch-action:manipulation;min-height:48px;}
 .nav-btn:last-child{border-right:none;}
-.nav-btn.active{color:var(--g);background:rgba(0,255,136,.05);text-shadow:0 0 6px rgba(0,255,136,.5);
+.nav-btn.active{color:var(--g);background:rgba(0,255,136,.08);
+  text-shadow:0 0 8px rgba(0,255,136,.7);
   border-top:2px solid var(--g);margin-top:-2px;}
-.nav-btn:hover:not(.active){color:rgba(0,255,136,.65);}
-.nav-btn .ni{font-size:13px;display:block;margin-bottom:2px;}
+.nav-btn:hover:not(.active){color:rgba(0,255,136,.85);}
+.nav-btn .ni{font-size:15px;display:block;margin-bottom:3px;} /* ↑ was 13px */
+/* logout/out button — red, legible */
+.nav-btn-logout{color:rgba(255,51,102,.75)!important;}  /* ↑ was .40/.35 */
+.nav-btn-logout:hover{color:var(--r)!important;}
 
-.snav-bar{display:flex;border-top:2px solid rgba(255,0,255,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+.snav-bar{display:flex;border-top:2px solid rgba(255,0,255,.35);
+  margin:8px -14px 0;background:rgba(0,0,0,.95);flex-shrink:0;
   padding-bottom:var(--sab);touch-action:manipulation;}
-.snav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(255,0,255,.1);
-  color:rgba(255,0,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+.snav-btn{flex:1;background:transparent;border:none;
+  border-right:1px solid rgba(255,0,255,.15);
+  color:rgba(255,0,255,.65);          /* ↑ was .30 */
+  font-family:'Press Start 2P',monospace;font-size:7px;
   padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
-  touch-action:manipulation;min-height:44px;}
+  touch-action:manipulation;min-height:48px;}
 .snav-btn:last-child{border-right:none;}
-.snav-btn.active{color:var(--p);background:rgba(255,0,255,.05);text-shadow:0 0 6px rgba(255,0,255,.5);
+.snav-btn.active{color:var(--p);background:rgba(255,0,255,.08);
+  text-shadow:0 0 8px rgba(255,0,255,.7);
   border-top:2px solid var(--p);margin-top:-2px;}
-.snav-btn:hover:not(.active){color:rgba(255,0,255,.65);}
-.snav-btn .ni{font-size:12px;display:block;margin-bottom:2px;}
-/* Admin button in staff nav has its own color */
-.snav-btn.adm-entry{color:rgba(176,96,255,.45)!important;}
-.snav-btn.adm-entry:hover{color:var(--adm)!important;background:rgba(176,96,255,.05)!important;}
+.snav-btn:hover:not(.active){color:rgba(255,0,255,.9);}
+.snav-btn .ni{font-size:14px;display:block;margin-bottom:3px;}
+/* Admin entry button in staff nav */
+.snav-btn.adm-entry{color:rgba(176,96,255,.75)!important;}  /* ↑ was .45 */
+.snav-btn.adm-entry:hover{color:var(--adm)!important;background:rgba(176,96,255,.08)!important;}
 
-.anav-bar{display:flex;border-top:2px solid rgba(176,96,255,.2);
-  margin:8px -14px 0;background:rgba(0,0,0,.92);flex-shrink:0;
+.anav-bar{display:flex;border-top:2px solid rgba(176,96,255,.35);
+  margin:8px -14px 0;background:rgba(0,0,0,.95);flex-shrink:0;
   padding-bottom:var(--sab);touch-action:manipulation;}
-.anav-btn{flex:1;background:transparent;border:none;border-right:1px solid rgba(176,96,255,.1);
-  color:rgba(176,96,255,.3);font-family:'Press Start 2P',monospace;font-size:6px;
+.anav-btn{flex:1;background:transparent;border:none;
+  border-right:1px solid rgba(176,96,255,.15);
+  color:rgba(176,96,255,.65);         /* ↑ was .30 */
+  font-family:'Press Start 2P',monospace;font-size:7px;
   padding:11px 2px 14px;cursor:pointer;text-align:center;transition:all .1s;line-height:2;
-  touch-action:manipulation;min-height:44px;}
+  touch-action:manipulation;min-height:48px;}
 .anav-btn:last-child{border-right:none;}
-.anav-btn.active{color:var(--adm);background:rgba(176,96,255,.05);text-shadow:0 0 6px rgba(176,96,255,.5);
+.anav-btn.active{color:var(--adm);background:rgba(176,96,255,.08);
+  text-shadow:0 0 8px rgba(176,96,255,.7);
   border-top:2px solid var(--adm);margin-top:-2px;}
-.anav-btn:hover:not(.active){color:rgba(176,96,255,.65);}
-.anav-btn .ni{font-size:12px;display:block;margin-bottom:2px;}
+.anav-btn:hover:not(.active){color:rgba(176,96,255,.9);}
+.anav-btn .ni{font-size:14px;display:block;margin-bottom:3px;}
 
 
 /* ── SCANNER ── */
@@ -499,7 +583,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="nav-btn active" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
     <button class="nav-btn" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
     <button class="nav-btn" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
-    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
+    <button class="nav-btn nav-btn-logout" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -521,7 +605,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="nav-btn" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
     <button class="nav-btn active" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
     <button class="nav-btn" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
-    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
+    <button class="nav-btn nav-btn-logout" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -584,7 +668,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="nav-btn" onclick="go('s-c-rewards')"><span class="ni">☕</span>CARD</button>
     <button class="nav-btn" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
     <button class="nav-btn active" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
-    <button class="nav-btn" style="color:rgba(255,51,102,.4);" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
+    <button class="nav-btn nav-btn-logout" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -659,7 +743,7 @@ select option{background:#07070f;color:var(--g);}
       <span class="ni">📷</span>SCANNER</button>
     <button class="snav-btn adm-entry" onclick="go('s-admin-login')">
       <span class="ni">🛡</span>ADMIN</button>
-    <button class="snav-btn" style="color:rgba(255,51,102,.35);" onclick="doStaffLogout()">
+    <button class="snav-btn nav-btn-logout" onclick="doStaffLogout()">
       <span class="ni">⏻</span>LOGOUT</button>
   </div>
 </div>
@@ -705,7 +789,7 @@ select option{background:#07070f;color:var(--g);}
       <span class="ni">📷</span>SCANNER</button>
     <button class="snav-btn adm-entry" onclick="go('s-admin-login')">
       <span class="ni">🛡</span>ADMIN</button>
-    <button class="snav-btn" style="color:rgba(255,51,102,.35);" onclick="doStaffLogout()">
+    <button class="snav-btn nav-btn-logout" onclick="doStaffLogout()">
       <span class="ni">⏻</span>LOGOUT</button>
   </div>
 </div>
@@ -827,7 +911,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
     <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
     <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
-    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+    <button class="anav-btn nav-btn-logout" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -847,7 +931,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="anav-btn active" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
     <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
     <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
-    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+    <button class="anav-btn nav-btn-logout" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -870,7 +954,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
     <button class="anav-btn active" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
     <button class="anav-btn" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
-    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+    <button class="anav-btn nav-btn-logout" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -916,7 +1000,7 @@ select option{background:#07070f;color:var(--g);}
     <button class="anav-btn" onclick="adminGoTab('rdm')"><span class="ni">🎁</span>HISTORY</button>
     <button class="anav-btn" onclick="adminGoTab('players')"><span class="ni">👥</span>PLAYERS</button>
     <button class="anav-btn active" onclick="adminGoTab('scan')"><span class="ni">📷</span>SCAN</button>
-    <button class="anav-btn" style="color:rgba(255,51,102,.35);" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
+    <button class="anav-btn nav-btn-logout" onclick="doAdminLogout()"><span class="ni">⏻</span>OUT</button>
   </div>
 </div>
 
@@ -973,31 +1057,56 @@ select option{background:#07070f;color:var(--g);}
 <script>
 'use strict';
 // ═══════════════════════════════════════════
-// SUPABASE
+// EDGE FUNCTION CONFIG
 // ═══════════════════════════════════════════
-const SUPA_URL = 'https://ivqftezvshaywludmteu.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2cWZ0ZXp2c2hheXdsdWRtdGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTQyMDQsImV4cCI6MjA4ODkzMDIwNH0.P7ZCHzhL6LVfb8BPg157T7Jw0YNSX3WLopM5UOTYj2w';
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const EDGE      = 'https://ivqftezvshaywludmteu.supabase.co/functions/v1';
+const ANON_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2cWZ0ZXp2c2hheXdsdWRtdGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTQyMDQsImV4cCI6MjA4ODkzMDIwNH0.P7ZCHzhL6LVfb8BPg157T7Jw0YNSX3WLopM5UOTYj2w';
 
 // ═══════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════
-const STAFF_PIN  = "1234";
-const ADMIN_PIN  = "0000";
 const PHONE_RE   = /^[0-9]{10}$/;
 const REWARD_EXP = 90;
 
 // ═══════════════════════════════════════════
+// EDGE FETCH — all server calls go here
+// ═══════════════════════════════════════════
+async function callEdge(fn, body, token = null) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': ANON_KEY,
+  };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`${EDGE}/${fn}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({ error: 'Network error' }));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+// ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let staffPin="", adminPin="";
+let staffPin='', adminPin='';
 let lastStampTime=0, coolTimer=null;
-let currentCustomer=null;   // signed-in customer (full object)
-let selectedCustomer=null;  // staff is viewing
-let adminCustomer=null;     // admin is viewing
-let staffList=[];           // cached list for staff/admin screens
+let currentCustomer=null;
+let selectedCustomer=null;
+let adminCustomer=null;
+let staffList=[];
 let cameraActive=false, html5QrCode=null;
 let admCamActive=false,  html5QrCodeAdm=null;
+
+// JWT tokens — sessionStorage so they die when the tab closes
+let staffToken = sessionStorage.getItem('nook_staff_token') || null;
+let adminToken = sessionStorage.getItem('nook_admin_token') || null;
+
+function saveStaffToken(t){ staffToken=t; sessionStorage.setItem('nook_staff_token',t); }
+function saveAdminToken(t){ adminToken=t; sessionStorage.setItem('nook_admin_token',t); }
+function clearStaffToken(){ staffToken=null; sessionStorage.removeItem('nook_staff_token'); }
+function clearAdminToken(){ adminToken=null; sessionStorage.removeItem('nook_admin_token'); }
 
 // ═══════════════════════════════════════════
 // LOADING OVERLAY
@@ -1008,108 +1117,26 @@ function showBusy(on){
 }
 
 // ═══════════════════════════════════════════
-// DATA TRANSFORM  (Supabase row → app object)
-// ═══════════════════════════════════════════
-function xform(row){
-  if(!row) return null;
-  return {
-    id:          row.id,
-    name:        row.name,
-    phone:       row.phone,
-    birthday:    row.birthday||'',
-    stamps:      row.stamps||0,
-    visits:      row.visits||0,
-    birthdayYear:row.birthday_year||0,
-    since:       row.since||'',
-    rewards:     (row.rewards||[]).map(r=>({
-      id:           r.id,
-      earned:       r.earned,
-      expires:      r.expires,
-      redeemed:     r.redeemed,
-      redeemedDate: r.redeemed_date,
-      note:         r.note||''
-    })),
-    history:     (row.history||[])
-      .sort((a,b)=>a.date.localeCompare(b.date)||(a.id||0)-(b.id||0))
-      .map(h=>({date:h.date,type:h.type,note:h.note||''}))
-  };
-}
-
-// ═══════════════════════════════════════════
-// DB HELPERS
+// EDGE DB HELPERS (replace supabase client)
 // ═══════════════════════════════════════════
 async function dbGetByPhone(phone){
-  const {data,error}=await sb.from('customers')
-    .select('*, rewards(*), history(*)')
-    .eq('phone',phone).maybeSingle();
-  if(error){console.error('dbGetByPhone error:',error);return null;}
-  return data?xform(data):null;
+  try{const d=await callEdge('nook-read',{action:'getByPhone',phone});return d.customer||null;}
+  catch(e){console.error('dbGetByPhone:',e);return null;}
 }
 async function dbGetById(id){
-  const {data,error}=await sb.from('customers')
-    .select('*, rewards(*), history(*)')
-    .eq('id',id).maybeSingle();
-  if(error){console.error('dbGetById error:',error);return null;}
-  return data?xform(data):null;
+  try{const d=await callEdge('nook-read',{action:'getById',id});return d.customer||null;}
+  catch(e){console.error('dbGetById:',e);return null;}
 }
 async function dbGetAll(){
-  const {data,error}=await sb.from('customers')
-    .select('*, rewards(*)')
-    .order('name');
-  if(error){console.error(error);return[];}
-  return (data||[]).map(xform);
+  try{const d=await callEdge('nook-read',{action:'getAll'});return d.customers||[];}
+  catch(e){console.error('dbGetAll:',e);return[];}
 }
-async function dbCreateCustomer(c){
-  const {error}=await sb.from('customers').insert({
-    id:c.id,name:c.name,phone:c.phone,
-    birthday:c.birthday||null,
-    stamps:0,visits:0,birthday_year:0,since:c.since
-  });
-  if(error){console.error('dbCreateCustomer error:',JSON.stringify(error));return false;}
-  return true;
-}
-async function dbUpdateCustomer(id,fields){
-  const m={};
-  if(fields.stamps!==undefined)       m.stamps=fields.stamps;
-  if(fields.visits!==undefined)       m.visits=fields.visits;
-  if(fields.birthdayYear!==undefined) m.birthday_year=fields.birthdayYear;
-  if(fields.name!==undefined)         m.name=fields.name;
-  if(fields.birthday!==undefined)     m.birthday=fields.birthday||null;
-  const {error}=await sb.from('customers').update(m).eq('id',id);
-  if(error) console.error(error);
-  return !error;
-}
-async function dbAddReward(r,customerId){
-  const {error}=await sb.from('rewards').insert({
-    id:r.id,customer_id:customerId,
-    earned:r.earned,expires:r.expires,
-    redeemed:false,redeemed_date:null,note:r.note||null
-  });
-  if(error) console.error(error);
-  return !error;
-}
-async function dbRedeemReward(rid,date){
-  const {error}=await sb.from('rewards')
-    .update({redeemed:true,redeemed_date:date}).eq('id',rid);
-  if(error) console.error(error);
-  return !error;
-}
-async function dbAddHistory(customerId,type,note=''){
-  const {error}=await sb.from('history').insert({
-    customer_id:customerId,date:todayStr(),type,note:note||null
-  });
-  if(error) console.error(error);
-  return !error;
-}
-
-// Reload a single customer and sync all local refs
 async function refreshCustomer(id){
   const fresh=await dbGetById(id);
   if(!fresh) return null;
   if(currentCustomer?.id===id)  currentCustomer=fresh;
   if(selectedCustomer?.id===id) selectedCustomer=fresh;
   if(adminCustomer?.id===id)    adminCustomer=fresh;
-  // update in staffList cache
   const li=staffList.findIndex(x=>x.id===id);
   if(li>=0) staffList[li]=fresh;
   return fresh;
@@ -1123,7 +1150,7 @@ async function go(id){
   if(id!=='s-admin-scan')    stopAdminCamera();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const asyncRenders={
+  const renders={
     's-c-rewards':    renderCustomerRewards,
     's-c-history':    renderCustomerHistory,
     's-c-settings':   renderCustomerSettings,
@@ -1135,7 +1162,7 @@ async function go(id){
     's-admin-players':loadAdminPlayerList,
     's-admin-detail': renderAdminDetail,
   };
-  if(asyncRenders[id]) await asyncRenders[id]();
+  if(renders[id]) await renders[id]();
 }
 function adminGoTab(tab){go('s-admin-'+tab);}
 function staffGoScan(){
@@ -1158,7 +1185,6 @@ function showToast(msg,type='ok'){
 // HELPERS
 // ═══════════════════════════════════════════
 function genId(){return "NOOK-"+String(Math.floor(Math.random()*9000)+1000);}
-function genRid(){return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function addDays(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function daysLeft(ds){return Math.ceil((new Date(ds+'T12:00:00')-new Date())/864e5);}
@@ -1250,17 +1276,19 @@ async function doCreate(){
   const bday=getBday('c-bm','c-bd','c-by');
   const nc={id:genId(),name,phone,birthday:bday,since:todayStr()};
   showBusy(true);
-  // Check phone not already taken
-  const existing=await dbGetByPhone(phone);
-  if(existing){showBusy(false);showToast('PHONE ALREADY REGISTERED','err');return;}
-  const ok=await dbCreateCustomer(nc);
-  if(!ok){showBusy(false);showToast('ERROR CREATING ACCOUNT','err');return;}
-  currentCustomer=await dbGetByPhone(phone);
-  showBusy(false);
-  document.getElementById('c-name').value=''; document.getElementById('c-phone').value='';
-  ['c-bm','c-bd','c-by'].forEach(id=>document.getElementById(id).value='');
-  showToast('★ WELCOME '+nc.name+'! ★');
-  go('s-c-rewards');
+  try{
+    await callEdge('nook-customer',{action:'create',...nc});
+    currentCustomer=await dbGetByPhone(phone);
+    showBusy(false);
+    document.getElementById('c-name').value='';
+    document.getElementById('c-phone').value='';
+    ['c-bm','c-bd','c-by'].forEach(id=>document.getElementById(id).value='');
+    showToast('★ WELCOME '+nc.name+'! ★');
+    go('s-c-rewards');
+  }catch(e){
+    showBusy(false);
+    showToast(e.message||'ERROR CREATING ACCOUNT','err');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1268,7 +1296,6 @@ async function doCreate(){
 // ═══════════════════════════════════════════
 async function renderCustomerRewards(){
   if(!currentCustomer) return;
-  // Refresh from DB to get latest stamps/rewards
   showBusy(true);
   const fresh=await dbGetById(currentCustomer.id);
   showBusy(false);
@@ -1313,19 +1340,24 @@ async function doSaveSettings(){
   const c=currentCustomer; if(!c) return;
   const name=document.getElementById('s-name').value.trim().toUpperCase();
   if(!name){showToast('NAME CANNOT BE EMPTY','err');return;}
-  const fields={name};
+  const payload={action:'updateSettings',customerId:c.id,name};
   if(!c.birthday){
     const bday=getBday('s-bm','s-bd','s-by');
-    if(bday) fields.birthday=bday;
+    if(bday) payload.birthday=bday;
   }
   showBusy(true);
-  await dbUpdateCustomer(c.id,fields);
-  currentCustomer=await dbGetById(c.id);
-  showBusy(false);
-  document.getElementById('c-set-name').textContent=currentCustomer.name;
-  document.getElementById('c-header-name').textContent=currentCustomer.name;
-  showToast('✓ SETTINGS SAVED');
-  renderCustomerSettings();
+  try{
+    await callEdge('nook-customer',payload);
+    currentCustomer=await dbGetById(c.id);
+    showBusy(false);
+    document.getElementById('c-set-name').textContent=currentCustomer.name;
+    document.getElementById('c-header-name').textContent=currentCustomer.name;
+    showToast('✓ SETTINGS SAVED');
+    renderCustomerSettings();
+  }catch(e){
+    showBusy(false);
+    showToast(e.message||'SAVE FAILED','err');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1357,7 +1389,7 @@ async function renderLeaderboard(){
 }
 
 // ═══════════════════════════════════════════
-// STAFF PIN
+// STAFF PIN — validates server-side
 // ═══════════════════════════════════════════
 function updateStaffPinUI(){
   for(let i=0;i<4;i++){
@@ -1371,21 +1403,37 @@ function staffPinPress(k){
   if(staffPin.length>=4) return;
   staffPin+=String(k); updateStaffPinUI();
   if(staffPin.length===4){
-    setTimeout(()=>{
-      if(staffPin===STAFF_PIN){staffPin='';updateStaffPinUI();go('s-staff-home');}
-      else{
+    setTimeout(async ()=>{
+      showBusy(true);
+      try{
+        const {token}=await callEdge('nook-auth',{pin:staffPin,role:'staff'});
+        staffPin=''; updateStaffPinUI();
+        saveStaffToken(token);
+        showBusy(false);
+        go('s-staff-home');
+      }catch(e){
+        showBusy(false);
+        staffPin=''; updateStaffPinUI();
         document.getElementById('spin-err').textContent='!! WRONG PIN !!';
         document.getElementById('spin-row').classList.add('shake');
         for(let i=0;i<4;i++) document.getElementById('spd'+i).classList.add('err');
-        setTimeout(()=>{staffPin='';updateStaffPinUI();document.getElementById('spin-err').textContent='';document.getElementById('spin-row').classList.remove('shake');},900);
+        setTimeout(()=>{
+          document.getElementById('spin-err').textContent='';
+          document.getElementById('spin-row').classList.remove('shake');
+        },900);
       }
     },120);
   }
 }
-function doStaffLogout(){stopCamera();go('s-welcome');showToast('STAFF LOGGED OUT','info');}
+function doStaffLogout(){
+  stopCamera();
+  clearStaffToken();
+  go('s-welcome');
+  showToast('STAFF LOGGED OUT','info');
+}
 
 // ═══════════════════════════════════════════
-// ADMIN PIN
+// ADMIN PIN — validates server-side
 // ═══════════════════════════════════════════
 function updateAdminPinUI(){
   for(let i=0;i<4;i++){
@@ -1399,18 +1447,34 @@ function adminPinPress(k){
   if(adminPin.length>=4) return;
   adminPin+=String(k); updateAdminPinUI();
   if(adminPin.length===4){
-    setTimeout(()=>{
-      if(adminPin===ADMIN_PIN){adminPin='';updateAdminPinUI();go('s-admin-dash');}
-      else{
+    setTimeout(async ()=>{
+      showBusy(true);
+      try{
+        const {token}=await callEdge('nook-auth',{pin:adminPin,role:'admin'});
+        adminPin=''; updateAdminPinUI();
+        saveAdminToken(token);
+        showBusy(false);
+        go('s-admin-dash');
+      }catch(e){
+        showBusy(false);
+        adminPin=''; updateAdminPinUI();
         document.getElementById('apin-err').textContent='!! WRONG PIN !!';
         document.getElementById('apin-row').classList.add('shake');
         for(let i=0;i<4;i++) document.getElementById('apd'+i).classList.add('err');
-        setTimeout(()=>{adminPin='';updateAdminPinUI();document.getElementById('apin-err').textContent='';document.getElementById('apin-row').classList.remove('shake');},900);
+        setTimeout(()=>{
+          document.getElementById('apin-err').textContent='';
+          document.getElementById('apin-row').classList.remove('shake');
+        },900);
       }
     },120);
   }
 }
-function doAdminLogout(){stopAdminCamera();go('s-welcome');showToast('ADMIN LOGGED OUT','info');}
+function doAdminLogout(){
+  stopAdminCamera();
+  clearAdminToken();
+  go('s-welcome');
+  showToast('ADMIN LOGGED OUT','info');
+}
 
 // ═══════════════════════════════════════════
 // STAFF HOME
@@ -1478,33 +1542,25 @@ async function sdAddStamp(){
   const now=Date.now();
   if(now-lastStampTime<5000){showToast('WAIT '+Math.ceil((5000-(now-lastStampTime))/1000)+'s','err');return;}
   lastStampTime=now;
-  const c=selectedCustomer; if(!c||c.stamps>=10) return;
-  const newStamps=c.stamps+1;
-  const newVisits=(c.visits||0)+1;
+  if(!staffToken){showToast('SESSION EXPIRED — PLEASE LOG IN AGAIN','err');go('s-staff-login');return;}
   showBusy(true);
-  if(newStamps>=10){
-    // Full card — reset stamps, grant reward
-    await dbUpdateCustomer(c.id,{stamps:0,visits:newVisits});
-    const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
-    await dbAddReward({id:genRid(),earned,expires,note:'10-stamp'},c.id);
-    await dbAddHistory(c.id,'stamp');
-    await dbAddHistory(c.id,'reward','10-stamp reward earned');
-    selectedCustomer=await refreshCustomer(c.id);
+  try{
+    const {customer}=await callEdge('nook-staff',{action:'addStamp',customerId:selectedCustomer.id},staffToken);
+    selectedCustomer=customer;
+    await refreshCustomer(customer.id);
     showBusy(false);
     renderStaffDetail();
-    showToast('★ FREE COFFEE EARNED! ★');
-  } else {
-    await dbUpdateCustomer(c.id,{stamps:newStamps,visits:newVisits});
-    await dbAddHistory(c.id,'stamp');
-    selectedCustomer=await refreshCustomer(c.id);
-    showBusy(false);
-    renderStaffDetail();
-    showToast('☕ STAMP ADDED ('+newStamps+'/10)');
-    // pop animation
+    showToast(customer.stamps===0?'★ FREE COFFEE EARNED! ★':'☕ STAMP ADDED ('+customer.stamps+'/10)');
+    // pip pop animation
     const pips=document.querySelectorAll('#sd-stamps .hp-pip');
-    if(pips[newStamps-1]){pips[newStamps-1].classList.remove('pop');void pips[newStamps-1].offsetWidth;pips[newStamps-1].classList.add('pop');}
+    const pi=Math.min(customer.stamps>0?customer.stamps-1:9,9);
+    if(pips[pi]){pips[pi].classList.remove('pop');void pips[pi].offsetWidth;pips[pi].classList.add('pop');}
+  }catch(e){
+    showBusy(false);
+    if(e.message.includes('Unauthorized')){showToast('SESSION EXPIRED — LOG IN AGAIN','err');go('s-staff-login');}
+    else showToast(e.message||'ERROR','err');
   }
-  // cooldown
+  // cooldown display
   clearInterval(coolTimer);
   coolTimer=setInterval(()=>{
     const r=Math.ceil((5000-(Date.now()-lastStampTime))/1000);
@@ -1519,24 +1575,34 @@ async function sdRedeemCoffee(){
   await sdRedeemById(pr[0].id);
 }
 async function sdRedeemById(rid){
+  if(!staffToken){showToast('SESSION EXPIRED','err');go('s-staff-login');return;}
   showBusy(true);
-  await dbRedeemReward(rid,todayStr());
-  await dbAddHistory(selectedCustomer.id,'reward','free coffee redeemed');
-  selectedCustomer=await refreshCustomer(selectedCustomer.id);
-  showBusy(false);
-  renderStaffDetail();
-  showToast('★★ FREE COFFEE REDEEMED! ★★');
+  try{
+    const {customer}=await callEdge('nook-staff',{action:'redeemReward',customerId:selectedCustomer.id,rewardId:rid},staffToken);
+    selectedCustomer=customer;
+    await refreshCustomer(customer.id);
+    showBusy(false);
+    renderStaffDetail();
+    showToast('★★ FREE COFFEE REDEEMED! ★★');
+  }catch(e){
+    showBusy(false);
+    showToast(e.message||'ERROR','err');
+  }
 }
 async function sdGrantBirthday(){
+  if(!staffToken){showToast('SESSION EXPIRED','err');go('s-staff-login');return;}
   showBusy(true);
-  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
-  await dbAddReward({id:genRid(),earned,expires,note:'birthday'},selectedCustomer.id);
-  await dbUpdateCustomer(selectedCustomer.id,{birthdayYear:new Date().getFullYear()});
-  await dbAddHistory(selectedCustomer.id,'birthday','birthday month reward granted');
-  selectedCustomer=await refreshCustomer(selectedCustomer.id);
-  showBusy(false);
-  renderStaffDetail();
-  showToast('🎂 BIRTHDAY REWARD GRANTED!','info');
+  try{
+    const {customer}=await callEdge('nook-staff',{action:'grantBirthday',customerId:selectedCustomer.id},staffToken);
+    selectedCustomer=customer;
+    await refreshCustomer(customer.id);
+    showBusy(false);
+    renderStaffDetail();
+    showToast('🎂 BIRTHDAY REWARD GRANTED!','info');
+  }catch(e){
+    showBusy(false);
+    showToast(e.message||'ERROR','err');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1551,16 +1617,13 @@ function startCamera(){
   html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:180,height:180}},
     async decoded=>{
       const id=decoded.trim();
-      const c=staffList.find(x=>x.id===id);
       stopCamera();
-      if(c){
-        showBusy(true);
-        selectedCustomer=await dbGetById(id);
-        showBusy(false);
-        go('s-staff-detail');
-      } else showToast('QR NOT RECOGNISED','err');
-    },
-    ()=>{}
+      showBusy(true);
+      selectedCustomer=await dbGetById(id);
+      showBusy(false);
+      if(selectedCustomer) go('s-staff-detail');
+      else showToast('QR NOT RECOGNISED','err');
+    },()=>{}
   ).then(()=>{cameraActive=true;btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';})
    .catch(()=>{rd.style.display='none';ph.style.display='block';showToast('CAMERA UNAVAILABLE','err');});
 }
@@ -1568,7 +1631,8 @@ function stopCamera(){
   if(html5QrCode&&cameraActive){
     html5QrCode.stop().catch(()=>{}).finally(()=>{
       html5QrCode=null; cameraActive=false;
-      const btn=document.getElementById('btn-cam');if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-b';}
+      const btn=document.getElementById('btn-cam');
+      if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-b';}
       const ph=document.getElementById('scan-placeholder'),rd=document.getElementById('qr-reader');
       if(ph)ph.style.display='block';if(rd){rd.style.display='none';rd.innerHTML='';}
     });
@@ -1598,12 +1662,11 @@ function startAdminCamera(){
       const id=decoded.trim();
       stopAdminCamera();
       showBusy(true);
-      const c=await dbGetById(id);
+      adminCustomer=await dbGetById(id);
       showBusy(false);
-      if(c){adminCustomer=c;go('s-admin-detail');}
+      if(adminCustomer) go('s-admin-detail');
       else showToast('QR NOT RECOGNISED','err');
-    },
-    ()=>{}
+    },()=>{}
   ).then(()=>{admCamActive=true;btn.textContent='■ STOP CAMERA';btn.className='btn btn-r';})
    .catch(()=>{rd.style.display='none';ph.style.display='block';showToast('CAMERA UNAVAILABLE','err');});
 }
@@ -1611,7 +1674,8 @@ function stopAdminCamera(){
   if(html5QrCodeAdm&&admCamActive){
     html5QrCodeAdm.stop().catch(()=>{}).finally(()=>{
       html5QrCodeAdm=null; admCamActive=false;
-      const btn=document.getElementById('btn-cam-adm');if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-adm';}
+      const btn=document.getElementById('btn-cam-adm');
+      if(btn){btn.textContent='▶ START CAMERA';btn.className='btn btn-adm';}
       const ph=document.getElementById('scan-ph-adm'),rd=document.getElementById('qr-reader-adm');
       if(ph)ph.style.display='block';if(rd){rd.style.display='none';rd.innerHTML='';}
     });
@@ -1657,12 +1721,8 @@ async function renderAdminDash(){
         <div style="font-size:7px;color:var(--y);">${(c.rewards||[]).filter(r=>r.redeemed).length} ☕</div>
       </div>`).join('')
     :'<div style="font-size:6px;color:rgba(176,96,255,.2);padding:6px;">NO DATA YET</div>';
-  // Recent activity — fetch with full history
-  showBusy(true);
-  const full=await dbGetAll();
-  showBusy(false);
   const evts=[];
-  full.forEach(c=>(c.history||[]).forEach(h=>evts.push({...h,cname:c.name})));
+  staffList.forEach(c=>(c.history||[]).forEach(h=>evts.push({...h,cname:c.name})));
   evts.sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('db-activity').innerHTML=evts.slice(0,12).map(e=>`
     <div class="hist-item">
@@ -1700,7 +1760,6 @@ async function renderAdminRdm(){
 }
 
 // ═══════════════════════════════════════════
-// ═══════════════════════════════════════════
 // ADMIN PLAYER LIST
 // ═══════════════════════════════════════════
 async function loadAdminPlayerList(){
@@ -1732,12 +1791,10 @@ function _renderAdminListFromCache(){
       </div>`;
     }).join('');
 }
-// Called by go() and by oninput on search box
 function renderAdminPlayerList(){
   if(staffList.length) _renderAdminListFromCache();
   else loadAdminPlayerList();
 }
-
 async function openAdminDetail(id){
   showBusy(true);
   adminCustomer=await dbGetById(id);
@@ -1767,73 +1824,34 @@ async function renderAdminDetail(){
   document.getElementById('ad-btn-bday').style.display=(isBirthdayMonth(c)&&!bdayUsed(c))?'block':'none';
   renderHistList('ad-hist-list',c);
 }
-async function adAddStamp(){
-  const c=adminCustomer; if(!c||c.stamps>=10) return;
-  const newStamps=c.stamps+1;
-  const newVisits=(c.visits||0)+1;
+// Helper: run admin action with JWT, refresh detail
+async function adminAction(action, extra={}){
+  if(!adminToken){showToast('SESSION EXPIRED','err');go('s-admin-login');return;}
   showBusy(true);
-  if(newStamps>=10){
-    await dbUpdateCustomer(c.id,{stamps:0,visits:newVisits});
-    const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
-    await dbAddReward({id:genRid(),earned,expires,note:'10-stamp'},c.id);
-    await dbAddHistory(c.id,'stamp','added by admin');
-    await dbAddHistory(c.id,'reward','10-stamp reward earned');
-    showToast('★ FREE COFFEE EARNED! ★');
-  } else {
-    await dbUpdateCustomer(c.id,{stamps:newStamps,visits:newVisits});
-    await dbAddHistory(c.id,'stamp','added by admin');
-    showToast('☕ STAMP ADDED ('+newStamps+'/10)');
+  try{
+    const {customer}=await callEdge('nook-staff',{action,customerId:adminCustomer.id,...extra},adminToken);
+    adminCustomer=customer;
+    await refreshCustomer(customer.id);
+    showBusy(false);
+    renderAdminDetail();
+  }catch(e){
+    showBusy(false);
+    if(e.message.includes('Unauthorized')){showToast('SESSION EXPIRED — LOG IN AGAIN','err');go('s-admin-login');}
+    else showToast(e.message||'ERROR','err');
   }
-  adminCustomer=await refreshCustomer(c.id);
-  showBusy(false);
-  renderAdminDetail();
 }
-async function adRemoveStamp(){
-  const c=adminCustomer; if(!c||c.stamps<=0) return;
-  showBusy(true);
-  await dbUpdateCustomer(c.id,{stamps:c.stamps-1});
-  await dbAddHistory(c.id,'stamp','removed by admin');
-  adminCustomer=await refreshCustomer(c.id);
-  showBusy(false);
-  renderAdminDetail();
-  showToast('STAMP REMOVED','info');
-}
-async function adGrantReward(){
-  const c=adminCustomer; if(!c) return;
-  showBusy(true);
-  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
-  await dbAddReward({id:genRid(),earned,expires,note:'admin-grant'},c.id);
-  await dbAddHistory(c.id,'reward','free coffee granted by admin');
-  adminCustomer=await refreshCustomer(c.id);
-  showBusy(false);
-  renderAdminDetail();
-  showToast('★ FREE COFFEE GRANTED ★');
-}
+async function adAddStamp()    { await adminAction('addStamp');    showToast(adminCustomer.stamps===0?'★ FREE COFFEE EARNED! ★':'☕ STAMP ADDED'); }
+async function adRemoveStamp() { await adminAction('removeStamp'); showToast('STAMP REMOVED','info'); }
+async function adGrantReward() { await adminAction('grantReward'); showToast('★ FREE COFFEE GRANTED ★'); }
+async function adGrantBirthday(){ await adminAction('grantBirthday'); showToast('🎂 BIRTHDAY REWARD GRANTED!','info'); }
 async function adRedeemCoffee(){
   const pr=pendingRewards(adminCustomer);
   if(!pr.length){showToast('NO VALID REWARDS','err');return;}
   await adRedeemById(pr[0].id);
 }
 async function adRedeemById(rid){
-  showBusy(true);
-  await dbRedeemReward(rid,todayStr());
-  await dbAddHistory(adminCustomer.id,'reward','free coffee redeemed');
-  adminCustomer=await refreshCustomer(adminCustomer.id);
-  showBusy(false);
-  renderAdminDetail();
+  await adminAction('redeemReward',{rewardId:rid});
   showToast('★★ FREE COFFEE REDEEMED! ★★');
-}
-async function adGrantBirthday(){
-  const c=adminCustomer; if(!c) return;
-  showBusy(true);
-  const earned=todayStr(),expires=addDays(earned,REWARD_EXP);
-  await dbAddReward({id:genRid(),earned,expires,note:'birthday'},c.id);
-  await dbUpdateCustomer(c.id,{birthdayYear:new Date().getFullYear()});
-  await dbAddHistory(c.id,'birthday','birthday month reward granted');
-  adminCustomer=await refreshCustomer(c.id);
-  showBusy(false);
-  renderAdminDetail();
-  showToast('🎂 BIRTHDAY REWARD GRANTED!','info');
 }
 
 // ═══════════════════════════════════════════
@@ -1866,21 +1884,14 @@ document.getElementById('qr-reader').style.display='none';
 document.getElementById('qr-reader-adm').style.display='none';
 window.addEventListener('beforeunload',()=>{stopCamera();stopAdminCamera();});
 
-// ── DVH SHIM ─────────────────────────────────────────────
-// iOS Safari changes the visible height as the toolbar shows/hides.
-// 100vh = full page height (ignores toolbar), causing overflow.
-// We measure window.innerHeight — the ACTUAL visible pixels — and
-// write it as --dvh so our height:calc(var(--dvh)*100) is always exact.
+// ── DVH SHIM ─────────────────────────────────────────────────────────────────
 function setDvh(){
   const dvh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--dvh', dvh + 'px');
 }
 setDvh();
-// Re-run on resize (toolbar toggle, orientation change)
 window.addEventListener('resize', setDvh);
-// Also fire on orientationchange for older iOS
 window.addEventListener('orientationchange', ()=>{ setTimeout(setDvh, 150); });
-
 </script>
 </body>
 </html>
