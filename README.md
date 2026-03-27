@@ -1,6 +1,6 @@
-# ☕ The Nook Café Loyalty App
+# The Nook Cafe Loyalty App
 
-A QR-based digital loyalty system for small cafés, built to replace traditional punch cards with a role-protected web app.
+A QR-based digital loyalty system for small cafes, built to replace traditional punch cards with a role-protected web app.
 
 **Live Demo:** [The Nook Café Loyalty App](https://tsyruk.github.io/Nook/)
 
@@ -8,7 +8,7 @@ A QR-based digital loyalty system for small cafés, built to replace traditional
 
 ## Project Overview
 
-The Nook Café Loyalty App is a digital rewards platform designed for small cafés. It allows customers to collect stamps, staff to manage rewards at the register, and admins to monitor loyalty activity through a protected dashboard.
+The Nook Cafe Loyalty App is a digital rewards platform designed for small cafés. It allows customers to collect stamps, staff to manage rewards at the register, and admins to monitor loyalty activity through a protected dashboard.
 
 The application supports three user roles:
 
