@@ -2,7 +2,7 @@
 
 A QR-based digital loyalty system for small cafés, built to replace traditional punch cards with a role-protected web app.
 
-**Live Demo:** [The Nook Cafe Loyalty App](https://tsyruk.github.io)
+**Live Demo:** [The Nook Cafe Loyalty App](https://tsyruk.github.io/Nook/)
 
 ---
 
