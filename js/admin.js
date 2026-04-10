@@ -41,7 +41,7 @@ function adminPinPress(k) {
       } catch (e) {
         showBusy(false);
         adminPin = ''; updateAdminPinUI();
-        document.getElementById('apin-err').textContent = '!! WRONG PIN !!';
+        document.getElementById('apin-err').textContent = e.message || '!! WRONG PIN !!';
         document.getElementById('apin-row').classList.add('shake');
         for (let i = 0; i < 4; i++) document.getElementById('apd' + i).classList.add('err');
         setTimeout(() => {
