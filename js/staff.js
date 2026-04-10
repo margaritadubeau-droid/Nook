@@ -43,7 +43,7 @@ function staffPinPress(k) {
       } catch (e) {
         showBusy(false);
         staffPin = ''; updateStaffPinUI();
-        document.getElementById('spin-err').textContent = '!! WRONG PIN !!';
+        document.getElementById('apin-err').textContent = e.message || '!! WRONG PIN !!';
         document.getElementById('spin-row').classList.add('shake');
         for (let i = 0; i < 4; i++) document.getElementById('spd' + i).classList.add('err');
         setTimeout(() => {
