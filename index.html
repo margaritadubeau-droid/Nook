@@ -37,7 +37,6 @@
   <div style="width:100%;margin-bottom:6px;">
     <button class="btn btn-g" onclick="go('s-signin')">[ SIGN IN ]</button>
     <button class="btn btn-b" onclick="go('s-create')">[ CREATE ACCOUNT ]</button>
-    <button class="btn-out" onclick="go('s-leaderboard')" style="margin-bottom:0;">[ TOP PLAYERS ]</button>
   </div>
   <div class="divider" style="width:100%;margin-top:8px;"></div>
   <button onclick="go('s-staff-login')"
@@ -238,17 +237,6 @@
     <button class="nav-btn" onclick="go('s-c-history')"><span class="ni">📜</span>LOG</button>
     <button class="nav-btn active" onclick="go('s-c-settings')"><span class="ni">⚙</span>SETTINGS</button>
     <button class="nav-btn nav-btn-logout" onclick="doSignOut()"><span class="ni">⏻</span>OUT</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════ LEADERBOARD ══ -->
-<div class="screen" id="s-leaderboard" style="padding-top:4px;">
-  <div class="scroll">
-    <button class="back" onclick="go('s-welcome')">◀ BACK</button>
-    <div style="text-align:center;margin-bottom:14px;">
-      <div style="font-size:14px;color:var(--y);letter-spacing:.08em;" class="glow">★ TOP PLAYERS ★</div>
-    </div>
-    <div class="card" style="padding:4px 0;"><div id="lb-list"></div></div>
   </div>
 </div>
 
