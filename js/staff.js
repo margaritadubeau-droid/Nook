@@ -64,16 +64,9 @@ function doStaffLogout() {
 
 // ── Staff home ───────────────────────────
 async function renderStaffHome() {
-  document.getElementById('sh-members').textContent = '…';
-  document.getElementById('sh-visits').textContent  = '…';
-  showBusy(true);
-  staffList = await dbGetAll();
-  showBusy(false);
-  document.getElementById('sh-members').textContent = staffList.length;
-  document.getElementById('sh-visits').textContent  = staffList.reduce((a,c) => a + (c.visits||0), 0);
+  staffList = [];
   renderCustomerList();
 }
-
 function renderCustomerList() {
   const q = (document.getElementById('staff-search')?.value || '').toUpperCase();
   const sorted = [...staffList].filter(c => !q || c.name.includes(q) || c.phone.includes(q) || c.id.includes(q));
