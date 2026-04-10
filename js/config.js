@@ -3,9 +3,9 @@
 // CONFIG — supabase client + app constants
 // ═══════════════════════════════════════════
 
-const EDGE     = 'https://ivqftezvshaywludmteu.supabase.co/functions/v1';
-const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml2cWZ0ZXp2c2hheXdsdWRtdGV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNTQyMDQsImV4cCI6MjA4ODkzMDIwNH0.P7ZCHzhL6LVfb8BPg157T7Jw0YNSX3WLopM5UOTYj2w';
-const SUPA_URL = 'https://ivqftezvshaywludmteu.supabase.co';
+const EDGE     = '__SUPABASE_URL__/functions/v1';
+const ANON_KEY = '__SUPABASE_ANON_KEY__';
+const SUPA_URL = '__SUPABASE_URL__';
 
 const sb = window.supabase.createClient(SUPA_URL, ANON_KEY);
 
