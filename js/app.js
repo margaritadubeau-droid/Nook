@@ -18,7 +18,6 @@ async function go(id) {
     's-c-rewards':     renderCustomerRewards,
     's-c-history':     renderCustomerHistory,
     's-c-settings':    renderCustomerSettings,
-    's-leaderboard':   renderLeaderboard,
     's-staff-home':    renderStaffHome,
     's-staff-detail':  renderStaffDetail,
     's-admin-dash':    renderAdminDash,
