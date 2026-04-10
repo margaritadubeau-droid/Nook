@@ -51,9 +51,9 @@ async function dbGetById(id) {
   } catch (e) { console.error('dbGetById:', e); return null; }
 }
 
-async function dbGetAll() {
+async function dbGetAll(token = null) {
   try {
-    const d = await callEdge('nook-read', { action: 'getAll' });
+    const d = await callEdge('nook-read', { action: 'getAll' }, token);
     return d.customers || [];
   } catch (e) { console.error('dbGetAll:', e); return []; }
 }
