@@ -64,7 +64,13 @@ function doStaffLogout() {
 
 // ── Staff home ───────────────────────────
 async function renderStaffHome() {
-  staffList = [];
+  document.getElementById('sh-members').textContent = '…';
+  document.getElementById('sh-visits').textContent  = '…';
+  showBusy(true);
+  staffList = await dbGetAll(staffToken);
+  showBusy(false);
+  document.getElementById('sh-members').textContent = staffList.length;
+  document.getElementById('sh-visits').textContent  = staffList.reduce((a,c) => a + (c.visits||0), 0);
   renderCustomerList();
 }
 function renderCustomerList() {
