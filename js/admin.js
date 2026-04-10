@@ -63,7 +63,7 @@ function doAdminLogout() {
 // ── Dashboard ────────────────────────────
 async function renderAdminDash() {
   showBusy(true);
-  staffList = await dbGetAll();
+  staffList = await dbGetAll(adminToken);
   showBusy(false);
   const total    = staffList.length;
   const visits   = staffList.reduce((a,c) => a + (c.visits||0), 0);
@@ -115,7 +115,7 @@ async function renderAdminDash() {
 // ── Redemptions log ──────────────────────
 async function renderAdminRdm() {
   showBusy(true);
-  const all = await dbGetAll();
+  const all = await dbGetAll(adminToken);
   showBusy(false);
   const rdms = [];
   all.forEach(c => (c.rewards||[]).filter(r=>r.redeemed).forEach(r =>
@@ -139,7 +139,7 @@ async function renderAdminRdm() {
 // ── Player list ──────────────────────────
 async function loadAdminPlayerList() {
   showBusy(true);
-  staffList = await dbGetAll();
+  staffList = await dbGetAll(adminToken);
   showBusy(false);
   _renderAdminListFromCache();
 }
