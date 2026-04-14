@@ -1,3 +1,10 @@
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/Nook/sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.error('SW failed:', err));
+  });
+}
 'use strict';
 // ═══════════════════════════════════════════
 // APP — navigation, shared state, boot
