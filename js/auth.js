@@ -35,7 +35,13 @@ function customerPinPress(k) {
       } catch (e) {
         showBusy(false);
         customerPin = ''; updateCustomerPinUI();
-        document.getElementById('cpin-err').textContent = e.message || '!! WRONG PIN !!';
+        const msg = e.message || '!! WRONG PIN !!';
+        const isLockout = msg.includes('TOO MANY');
+        if (isLockout) {
+          showToast(msg, 'err');
+        } else {
+          document.getElementById('cpin-err').textContent = msg;
+        }
         document.getElementById('cpin-row').classList.add('shake');
         for (let i = 0; i < 4; i++) document.getElementById('cpd' + i).classList.add('err');
         setTimeout(() => {
