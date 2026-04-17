@@ -127,3 +127,60 @@ async function doSaveSettings() {
     showToast(e.message || 'SAVE FAILED', 'err');
   }
 }
+// ── Change PIN ────────────────────────────────────────────────────────────
+let cpOld = '';
+let cpNew = '';
+
+function cpPress(which, k) {
+  const isOld = which === 'old';
+  if (k === 'del') {
+    if (isOld) cpOld = cpOld.slice(0,-1);
+    else       cpNew = cpNew.slice(0,-1);
+  } else {
+    if (isOld && cpOld.length < 4) cpOld += String(k);
+    if (!isOld && cpNew.length < 4) cpNew += String(k);
+  }
+  // update dots
+  ['old','new'].forEach(w => {
+    const val = w === 'old' ? cpOld : cpNew;
+    for (let i = 0; i < 4; i++) {
+      const d = document.getElementById(`cp-${w}-${i}`);
+      d.innerHTML = i < val.length ? '<div class="pin-pip"></div>' : '';
+      d.classList.toggle('on', i < val.length);
+    }
+  });
+}
+
+async function doChangePin() {
+  if (cpOld.length < 4) { document.getElementById('cp-err').textContent = 'ENTER YOUR CURRENT PIN'; return; }
+  if (cpNew.length < 4) { document.getElementById('cp-err').textContent = 'ENTER YOUR NEW PIN'; return; }
+  if (cpOld === cpNew)  { document.getElementById('cp-err').textContent = 'NEW PIN MUST BE DIFFERENT'; return; }
+  showBusy(true);
+  try {
+    await callEdge('nook-customer', { action: 'changePin', customerId: currentCustomer.id, oldPin: cpOld, newPin: cpNew });
+    cpOld = ''; cpNew = '';
+    cpPress('old', 'del'); cpPress('new', 'del'); // reset UI
+    showBusy(false);
+    showToast('✓ PIN CHANGED!');
+    go('s-c-settings');
+  } catch (e) {
+    showBusy(false);
+    document.getElementById('cp-err').textContent = e.message || 'ERROR';
+  }
+}
+
+// ── Delete account ────────────────────────────────────────────────────────
+async function doDeleteAccount() {
+  if (!confirm('DELETE YOUR ACCOUNT? THIS CANNOT BE UNDONE.')) return;
+  showBusy(true);
+  try {
+    await callEdge('nook-customer', { action: 'deleteAccount', customerId: currentCustomer.id });
+    showBusy(false);
+    currentCustomer = null;
+    go('s-welcome');
+    showToast('ACCOUNT DELETED', 'info');
+  } catch (e) {
+    showBusy(false);
+    showToast(e.message || 'ERROR', 'err');
+  }
+}
