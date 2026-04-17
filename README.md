@@ -136,4 +136,4 @@ Nook/
 
 ## License
 
-Built for educational and portfolio purposes.
+Built for educational and portfolio purposes. MIT License, see LICENSE file.
