@@ -34,10 +34,12 @@ function pendingRewards(c) {
 }
 
 // ── Stamp pips ───────────────────────────
-function renderHPBar(el, stamps, max = 10) {
-  el.innerHTML = Array.from({ length: max }, (_,i) =>
-    `<div class="hp-pip ${i < stamps ? 'on' : ''}"></div>`
-  ).join('');
+function renderHPBar(el, stamps, max = 10, animateIndex = -1) {
+  el.innerHTML = Array.from({ length: max }, (_,i) => {
+    const on  = i < stamps ? 'on' : '';
+    const pop = i === animateIndex ? 'pop' : '';
+    return `<div class="hp-pip ${on} ${pop}"></div>`;
+  }).join('');
 }
 
 // ── Offer banners ────────────────────────
